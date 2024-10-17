@@ -48,6 +48,7 @@ import nl.obren.sokrates.sourcecode.lang.sql.SqlAnalyzer;
 import nl.obren.sokrates.sourcecode.lang.swift.SwiftAnalyzer;
 import nl.obren.sokrates.sourcecode.lang.thrift.ThriftAnalyzer;
 import nl.obren.sokrates.sourcecode.lang.ts.TypeScriptAnalyzer;
+import nl.obren.sokrates.sourcecode.lang.tsql.TSqlAnalyzer;
 import nl.obren.sokrates.sourcecode.lang.vb.VisualBasicAnalyzer;
 import nl.obren.sokrates.sourcecode.lang.xml.XmlAnalyzer;
 import nl.obren.sokrates.sourcecode.lang.yaml.YamlAnalyzer;
@@ -160,7 +161,12 @@ public class LanguageAnalyzerFactory {
         // Hack
         analyzersMap.put("hack", HackAnalyzer.class);
 
+        // pl/sql
         registerPlSql();
+
+        // t-sql
+        registerTSql();
+
         registerPython();
 
         // scala
@@ -426,7 +432,10 @@ public class LanguageAnalyzerFactory {
         analyzersMap.put("pck", PlSqlAnalyzer.class);
         analyzersMap.put("pkb", PlSqlAnalyzer.class);
         analyzersMap.put("plb", PlSqlAnalyzer.class);
+    }
 
+    private void registerTSql() {
+        analyzersMap.put("tsql", TSqlAnalyzer.class);
     }
 
     private void registerJson() {

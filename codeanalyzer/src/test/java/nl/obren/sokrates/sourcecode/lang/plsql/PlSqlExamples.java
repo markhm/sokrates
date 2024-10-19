@@ -25,6 +25,7 @@ public class PlSqlExamples {
             "   \n" +
             "   -- end of block\n" +
             "END;";
+
     public static final String CONTENT_1_CLEANED = "DECLARE\n" +
             "   name varchar2(20); \n" +
             "   company varchar2(30); \n" +

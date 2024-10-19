@@ -25,11 +25,8 @@ public class TSqlAnalyzerTest {
 
         SourceFile sourceFile = new SourceFile(new File("test_lines.tsql"), TSqlExamples.CONTENT_1);
 
-        // System.out.println(sourceFile.getLines());
-
         CleanedContent cleanedContent = analyzer.cleanForLinesOfCodeCalculations(sourceFile);
 
-        // System.out.println(cleanedContent.getCleanedContent());
         assertEquals(TSqlExamples.CONTENT_1_CLEANED, cleanedContent.getCleanedContent());
     }
 

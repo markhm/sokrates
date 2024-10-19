@@ -1,76 +1,6 @@
 package nl.obren.sokrates.sourcecode.lang.tsql;
 
 public class TSqlExamples {
-//    public static final String CONTENT_1 = "DECLARE\n" +
-//            "   -- variable declaration\n" +
-//            "   name varchar2(20); \n" +
-//            "   company varchar2(30); \n" +
-//            "   introduction clob; \n" +
-//            "   choice char(1); \n" +
-//            "   \n" +
-//            "BEGIN \n" +
-//            "\n" +
-//            "   /* \n" +
-//            "   *  PL/SQL executable statement(s) \n" +
-//            "   */\n" +
-//            "   name := 'John Smith'; \n" +
-//            "   company := 'Infotech'; \n" +
-//            "   introduction := ' Hello! I''m John Smith from Infotech.'; \n" +
-//            "   choice := 'y'; \n" +
-//            "   IF choice = 'y' THEN \n" +
-//            "      dbms_output.put_line(name); \n" +
-//            "      dbms_output.put_line(company); \n" +
-//            "      dbms_output.put_line(introduction); \n" +
-//            "   END IF; \n" +
-//            "   \n" +
-//            "   -- end of block\n" +
-//            "END;";
-//
-//    public static final String CONTENT_1_CLEANED = "DECLARE\n" +
-//            "   name varchar2(20); \n" +
-//            "   company varchar2(30); \n" +
-//            "   introduction clob; \n" +
-//            "   choice char(1); \n" +
-//            "BEGIN \n" +
-//            "   name := 'John Smith'; \n" +
-//            "   company := 'Infotech'; \n" +
-//            "   introduction := ' Hello! I''m John Smith from Infotech.'; \n" +
-//            "   choice := 'y'; \n" +
-//            "   IF choice = 'y' THEN \n" +
-//            "      dbms_output.put_line(name); \n" +
-//            "      dbms_output.put_line(company); \n" +
-//            "      dbms_output.put_line(introduction); \n" +
-//            "   END IF; \n" +
-//            "END;";
-//    public static final String CONTENT_2 = "DECLARE\n" +
-//            "   -- variable declaration\n" +
-//            "   c_id customers.id%type := &cc_id;\n" +
-//            "   c_name customerS.Name%type;\n" +
-//            "   c_addr customers.address%type;\n" +
-//            "   -- user defined exception\n" +
-//            "   ex_invalid_id  EXCEPTION;\n" +
-//            "BEGIN\n" +
-//            "   IF c_id <= 0 THEN\n" +
-//            "      RAISE ex_invalid_id;\n" +
-//            "   ELSE\n" +
-//            "      SELECT  name, address INTO  c_name, c_addr\n" +
-//            "      FROM customers\n" +
-//            "      WHERE id = c_id;\n" +
-//            "      DBMS_OUTPUT.PUT_LINE ('Name: '||  c_name);\n" +
-//            "      DBMS_OUTPUT.PUT_LINE ('Address: ' || c_addr);\n" +
-//            "   END IF;\n" +
-//            "\n" +
-//            "EXCEPTION\n" +
-//            "    /*\n" +
-//            "    *  PL/SQL exception handling\n" +
-//            "    */\n" +
-//            "   WHEN ex_invalid_id THEN\n" +
-//            "      dbms_output.put_line('ID must be greater than zero!');\n" +
-//            "   WHEN no_data_found THEN\n" +
-//            "      dbms_output.put_line('No such customer!');\n" +
-//            "   WHEN others THEN\n" +
-//            "      dbms_output.put_line('Error!');\n" +
-//            "END;";
 
     public static final String CONTENT_1 = "-- Variable declaration\n" +
             "DECLARE @name NVARCHAR(20), \n" +
@@ -90,10 +20,13 @@ public class TSqlExamples {
             "    PRINT @introduction;\n" +
             "END";
 
-    public static final String CONTENT_1_CLEANED = "DECLARE @name NVARCHAR(20), @company NVARCHAR(30), @introduction NVARCHAR(MAX), @choice CHAR(1);\n" +
-            "SET @name = 'John Smith';\n" +
-            "SET @company = 'Infotech';\n" +
-            "SET @introduction = ' Hello! I''m John Smith from Infotech.';\n" +
+    public static final String CONTENT_1_CLEANED = "DECLARE @name NVARCHAR(20), \n" +
+            "        @company NVARCHAR(30), \n" +
+            "        @introduction NVARCHAR(MAX), \n" +
+            "        @choice CHAR(1);\n" +
+            "SET @name = 'John Smith'; \n" +
+            "SET @company = 'Infotech'; \n" +
+            "SET @introduction = ' Hello! I''m John Smith from Infotech.'; \n" +
             "SET @choice = 'y';\n" +
             "IF @choice = 'y'\n" +
             "BEGIN\n" +
@@ -128,74 +61,9 @@ public class TSqlExamples {
             "        PRINT 'Error!';\n" +
             "END CATCH";
 
-    // ------
-
-//    public static final String CONTENT_2_CLEANED_FOR_DUPLICATION = "DECLARE\n" +
-//            "c_id customers.id%type := &cc_id;\n" +
-//            "c_name customerS.Name%type;\n" +
-//            "c_addr customers.address%type;\n" +
-//            "ex_invalid_id EXCEPTION;\n" +
-//            "BEGIN\n" +
-//            "IF c_id <= 0 THEN\n" +
-//            "RAISE ex_invalid_id;\n" +
-//            "ELSE\n" +
-//            "SELECT name, address INTO c_name, c_addr\n" +
-//            "FROM customers\n" +
-//            "WHERE id = c_id;\n" +
-//            "DBMS_OUTPUT.PUT_LINE ('Name: '|| c_name);\n" +
-//            "DBMS_OUTPUT.PUT_LINE ('Address: ' || c_addr);\n" +
-//            "END IF;\n" +
-//            "EXCEPTION\n" +
-//            "WHEN ex_invalid_id THEN\n" +
-//            "dbms_output.put_line('ID must be greater than zero!');\n" +
-//            "WHEN no_data_found THEN\n" +
-//            "dbms_output.put_line('No such customer!');\n" +
-//            "WHEN others THEN\n" +
-//            "dbms_output.put_line('Error!');\n" +
-//            "END;";
-//    public static final String CONTENT_3 = "CREATE PROCEDURE create_email_address ( -- Procedure heading part begins\n" +
-//            "    name1 VARCHAR2,\n" +
-//            "    name2 VARCHAR2,\n" +
-//            "    company VARCHAR2,\n" +
-//            "    email OUT VARCHAR2\n" +
-//            ") -- Procedure heading part ends\n" +
-//            "AS\n" +
-//            "-- Declarative part begins (optional)\n" +
-//            "error_message VARCHAR2(30) := 'Email address is too long.';\n" +
-//            "BEGIN -- Executable part begins (mandatory)\n" +
-//            "    email := name1 || '.' || name2 || '@' || company;\n" +
-//            "EXCEPTION -- Exception-handling part begins (optional)\n" +
-//            "WHEN VALUE_ERROR THEN\n" +
-//            "    DBMS_OUTPUT.PUT_LINE(error_message);\n" +
-//            "END create_email_address;";
-//    public static final String CONTENT_4 = "CREATE OR REPLACE PACKAGE aa_pkg AUTHID DEFINER IS\n" +
-//            "  TYPE aa_type IS TABLE OF INTEGER INDEX BY VARCHAR2(15);\n" +
-//            "END;\n" +
-//            "/\n" +
-//            "CREATE OR REPLACE PROCEDURE print_aa (aa aa_pkg.aa_type) AUTHID DEFINER IS i  VARCHAR2(15);\n" +
-//            "BEGIN\n" +
-//            "  i := aa.FIRST;\n" +
-//            " \n" +
-//            "  WHILE i IS NOT NULL LOOP\n" +
-//            "    DBMS_OUTPUT.PUT_LINE (aa(i) || '  ' || i);\n" +
-//            "    i := aa.NEXT(i);\n" +
-//            "  END LOOP;\n" +
-//            "END;\n" +
-//            "/\n" +
-//            "DECLARE\n" +
-//            "  aa_var  aa_pkg.aa_type;\n" +
-//            "BEGIN\n" +
-//            "  aa_var('zero') := 0;\n" +
-//            "  aa_var('one') := 1;\n" +
-//            "  aa_var('two') := 2;\n" +
-//            "  print_aa(aa_var);\n" +
-//            "END;\n" +
-//            "/";
-
     public static final String CONTENT_2_CLEANED_FOR_DUPLICATION = "DECLARE @c_id INT = &cc_id;\n" +
             "DECLARE @c_name NVARCHAR(50), @c_addr NVARCHAR(100);\n" +
             "DECLARE @ex_invalid_id EXCEPTION;\n" +
-            "\n" +
             "BEGIN TRY\n" +
             "    IF @c_id <= 0\n" +
             "        THROW 50000, 'ID must be greater than zero!', 1;\n" +

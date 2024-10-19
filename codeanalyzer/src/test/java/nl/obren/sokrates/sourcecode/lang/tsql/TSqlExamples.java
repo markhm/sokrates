@@ -126,58 +126,6 @@ public class TSqlExamples {
             "\n" +
             "-- Example usage would typically be in a separate script or procedure.\n";
 
-
-//    public static final String CONTENT_5 = "CREATE OR REPLACE PACKAGE c_package AS\n" +
-//            "   -- Adds a customer\n" +
-//            "   PROCEDURE addCustomer(c_id   customers.id%type,\n" +
-//            "   c_name customers.Name%type,\n" +
-//            "   c_age  customers.age%type,\n" +
-//            "   c_addr customers.address%type,\n" +
-//            "   c_sal  customers.salary%type);\n" +
-//            "   \n" +
-//            "   -- Removes a customer\n" +
-//            "   PROCEDURE delCustomer(c_id  customers.id%TYPE);\n" +
-//            "   --Lists all customers\n" +
-//            "   PROCEDURE listCustomer;\n" +
-//            "  \n" +
-//            "END c_package;\n" +
-//            "/\n" +
-//            "CREATE OR REPLACE PACKAGE BODY c_package AS\n" +
-//            "   PROCEDURE addCustomer(c_id  customers.id%type,\n" +
-//            "      c_name customers.Name%type,\n" +
-//            "      c_age  customers.age%type,\n" +
-//            "      c_addr  customers.address%type,\n" +
-//            "      c_sal   customers.salary%type)\n" +
-//            "   IS\n" +
-//            "   BEGIN\n" +
-//            "      INSERT INTO customers (id,name,age,address,salary)\n" +
-//            "         VALUES(c_id, c_name, c_age, c_addr, c_sal);\n" +
-//            "   END addCustomer;\n" +
-//            "   \n" +
-//            "   PROCEDURE delCustomer(c_id   customers.id%type) IS\n" +
-//            "   BEGIN\n" +
-//            "      DELETE FROM customers\n" +
-//            "      WHERE id = c_id;\n" +
-//            "   END delCustomer;\n" +
-//            "   \n" +
-//            "   PROCEDURE listCustomer IS\n" +
-//            "   CURSOR c_customers is\n" +
-//            "      SELECT  name FROM customers;\n" +
-//            "   TYPE c_list is TABLE OF customers.Name%type;\n" +
-//            "   name_list c_list := c_list();\n" +
-//            "   counter integer :=0;\n" +
-//            "   BEGIN\n" +
-//            "      FOR n IN c_customers LOOP\n" +
-//            "      counter := counter +1;\n" +
-//            "      name_list.extend;\n" +
-//            "      name_list(counter) := n.name;\n" +
-//            "      dbms_output.put_line('Customer(' ||counter|| ')'||name_list(counter));\n" +
-//            "      END LOOP;\n" +
-//            "   END listCustomer;\n" +
-//            "\n" +
-//            "END c_package;\n" +
-//            "/\n";
-
     public static final String CONTENT_5 = "-- T-SQL does not support packages like PL/SQL. Instead, we create separate stored procedures.\n" +
             "\n" +
             "-- Add Customer Procedure\n" +
@@ -234,45 +182,6 @@ public class TSqlExamples {
             "-- Note: In T-SQL, you typically would not encapsulate these procedures within a single script\n" +
             "-- like you might with a PL/SQL package body. Each would be a standalone script or stored in the database.\n";
 
-//    public static final String CONTENT_6 =  "DECLARE\n" +
-//            "   code customers.id%type:= 8;\n" +
-//            "BEGIN\n" +
-//            "   c_package.addCustomer(7, 'Rajnish', 25, 'Chennai', 3500);\n" +
-//            "   c_package.addCustomer(8, 'Subham', 32, 'Delhi', 7500);\n" +
-//            "   c_package.listCustomer;\n" +
-//            "   c_package.delCustomer(code);\n" +
-//            "   c_package.listCustomer;\n" +
-//            "END;";
-//    public static final String CONTENT_7 = "CREATE PACKAGE emp_bonus AS\n" +
-//            "  PROCEDURE calc_bonus (date_hired employees.hire_date%TYPE);\n" +
-//            "END emp_bonus;\n" +
-//            "/\n" +
-//            "CREATE OR REPLACE PACKAGE BODY emp_bonus AS\n" +
-//            "  PROCEDURE calc_bonus\n" +
-//            "    (date_hired employees.hire_date%TYPE) IS\n" +
-//            "  BEGIN\n" +
-//            "    DBMS_OUTPUT.PUT_LINE\n" +
-//            "      ('Employees hired on ' || date_hired || ' get bonus.');\n" +
-//            "  END;\n" +
-//            "END emp_bonus;\n" +
-//            "/";
-//    public static final String CONTENT_8 = "CREATE OR REPLACE PROCEDURE fetch_from_cursor IS\n" +
-//            "  v_name  people.name%TYPE;\n" +
-//            "BEGIN\n" +
-//            "  IF sr_pkg.c%ISOPEN THEN\n" +
-//            "    emp_bonus.calc_bonus;\n" +
-//            "  ELSE\n" +
-//            "    emp_bonus.PUT_LINE('Cursor is closed; opening now.');\n" +
-//            "    OPEN sr_pkg.c;\n" +
-//            "  END IF;\n" +
-//            " \n" +
-//            "  FETCH sr_pkg.c INTO v_name;\n" +
-//            "  c_package.delCustomer(code);\n" +
-//            " \n" +
-//            "  FETCH sr_pkg.c INTO v_name;\n" +
-//            "    c_package.PUT_LINE('Fetched: ' || v_name);\n" +
-//            "END fetch_from_cursor;";
-
     public static final String CONTENT_6 = "-- Assuming procedures AddCustomer, DeleteCustomer, and ListCustomers are defined\n" +
             "DECLARE @code INT = 8;\n" +
             "\n" +
@@ -326,57 +235,6 @@ public class TSqlExamples {
             "    CLOSE customerCursor;\n" +
             "    DEALLOCATE customerCursor;\n" +
             "END;\n";
-
-//    public static final String CONTENT_9 = "CREATE OR REPLACE PACKAGE \"msrepsrvc.GF_PR_Print_P049\" AS\n" +
-//            "   -- Adds a customer\n" +
-//            "   PROCEDURE addCustomer(c_id   customers.id%type,\n" +
-//            "   c_name customers.Name%type,\n" +
-//            "   c_age  customers.age%type,\n" +
-//            "   c_addr customers.address%type,\n" +
-//            "   c_sal  customers.salary%type);\n" +
-//            "   \n" +
-//            "   -- Removes a customer\n" +
-//            "   PROCEDURE delCustomer(c_id  customers.id%TYPE);\n" +
-//            "   --Lists all customers\n" +
-//            "   PROCEDURE listCustomer;\n" +
-//            "  \n" +
-//            "END GF_PR_Print_P049;\n" +
-//            "/\n" +
-//            "CREATE OR REPLACE PACKAGE BODY \"msrepsrvc.GF_PR_Print_P049\" AS\n" +
-//            "   PROCEDURE addCustomer(c_id  customers.id%type,\n" +
-//            "      c_name customers.Name%type,\n" +
-//            "      c_age  customers.age%type,\n" +
-//            "      c_addr  customers.address%type,\n" +
-//            "      c_sal   customers.salary%type)\n" +
-//            "   IS\n" +
-//            "   BEGIN\n" +
-//            "      INSERT INTO customers (id,name,age,address,salary)\n" +
-//            "         VALUES(c_id, c_name, c_age, c_addr, c_sal);\n" +
-//            "   END addCustomer;\n" +
-//            "   \n" +
-//            "   PROCEDURE delCustomer(c_id   customers.id%type) IS\n" +
-//            "   BEGIN\n" +
-//            "      DELETE FROM customers\n" +
-//            "      WHERE id = c_id;\n" +
-//            "   END delCustomer;\n" +
-//            "   \n" +
-//            "   PROCEDURE listCustomer IS\n" +
-//            "   CURSOR c_customers is\n" +
-//            "      SELECT  name FROM customers;\n" +
-//            "   TYPE c_list is TABLE OF customers.Name%type;\n" +
-//            "   name_list c_list := c_list();\n" +
-//            "   counter integer :=0;\n" +
-//            "   BEGIN\n" +
-//            "      FOR n IN c_customers LOOP\n" +
-//            "      counter := counter +1;\n" +
-//            "      name_list.extend;\n" +
-//            "      name_list(counter) := n.name;\n" +
-//            "      dbms_output.put_line('Customer(' ||counter|| ')'||name_list(counter));\n" +
-//            "      END LOOP;\n" +
-//            "   END listCustomer;\n" +
-//            "\n" +
-//            "END GF_PR_Print_P049;\n" +
-//            "/\n";
 
     public static final String CONTENT_9 = "-- Note: T-SQL does not support packages, so we'll create procedures for each function.\n" +
             "-- For the purpose of this example, we'll assume a naming convention similar to PL/SQL packages for organization.\n" +
@@ -447,24 +305,6 @@ public class TSqlExamples {
             "        PRINT 'No customers to list.';\n" +
             "END;\n";
 
-//public static final String CONTENT_10 = "package gf_BI is\n" +
-//            "   -- Add a comment\n" +
-//            "   function get_p1100_date return date;\n" +
-//            "end gf_BI;\n" +
-//            "/\n" +
-//            "PACKAGE BODY \"GF_BI\" is\n" +
-//            " -- #produkt_BI\n" +
-//            " -- #AutoIT\n" +
-//            " -- #omtegning\n" +
-//            " c_this_package constant varchar2(11) := 'GF_BI.';\n" +
-//            " function get_p1100_date return date is\n" +
-//            " begin\n" +
-//            "  return p1100.policy_line_rec.cover_start_date;\n" +
-//            " end get_p1100_date;\n" +
-//            "\n" +
-//            "end gf_BI;\n" +
-//            "/\n";
-
     public static final String CONTENT_10 = "-- T-SQL script for demonstrating the use of the previously defined procedures\n" +
             "\n" +
             "-- Adding a customer\n" +
@@ -484,5 +324,4 @@ public class TSqlExamples {
             "\n" +
             "-- Attempting to delete a non-existent customer\n" +
             "EXEC GF_PR_Print_P049_DeleteCustomer @c_id = 100;\n";
-
 }

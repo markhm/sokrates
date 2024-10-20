@@ -7,8 +7,6 @@ import nl.obren.sokrates.sourcecode.cleaners.CommentsAndEmptyLinesCleaner;
 import nl.obren.sokrates.sourcecode.cleaners.SourceCodeCleanerUtils;
 import nl.obren.sokrates.sourcecode.dependencies.DependenciesAnalysis;
 import nl.obren.sokrates.sourcecode.lang.LanguageAnalyzer;
-import nl.obren.sokrates.sourcecode.lang.plsql.PlSqlHeuristicDependenciesExtractor;
-import nl.obren.sokrates.sourcecode.lang.plsql.PlSqlHeuristicUnitsExtractor;
 import nl.obren.sokrates.sourcecode.units.UnitInfo;
 
 import java.util.ArrayList;
@@ -65,12 +63,12 @@ public class TSqlAnalyzer extends LanguageAnalyzer {
 
     @Override
     public List<UnitInfo> extractUnits(SourceFile sourceFile) {
-        return new PlSqlHeuristicUnitsExtractor().extractUnits(sourceFile);
+        return new TSqlHeuristicUnitsExtractor().extractUnits(sourceFile);
     }
 
     @Override
     public DependenciesAnalysis extractDependencies(List<SourceFile> sourceFiles, ProgressFeedback progressFeedback) {
-        return new PlSqlHeuristicDependenciesExtractor().extractDependencies(sourceFiles, progressFeedback);
+        return new TSqlHeuristicDependenciesExtractor().extractDependencies(sourceFiles, progressFeedback);
     }
 
     @Override

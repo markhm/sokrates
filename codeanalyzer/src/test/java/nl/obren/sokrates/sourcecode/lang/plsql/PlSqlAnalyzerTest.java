@@ -63,6 +63,8 @@ public class PlSqlAnalyzerTest {
         PlSqlAnalyzer analyzer = new PlSqlAnalyzer();
         SourceFile sourceFile = new SourceFile(new File("test_units2.pls"), PlSqlExamples.CONTENT_4);
 
+        System.out.println(sourceFile.getContent());
+
         List<UnitInfo> unitInfos = analyzer.extractUnits(sourceFile);
         assertEquals(2, unitInfos.size());
         assertEquals("print_aa", unitInfos.get(1).getShortName());

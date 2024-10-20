@@ -22,7 +22,6 @@ public class TSqlAnalyzerTest {
 
     @Test
     public void cleanForLinesOfCodeCalculations() {
-
         SourceFile sourceFile = new SourceFile(new File("test_lines.tsql"), TSqlExamples.CONTENT_1);
 
         CleanedContent cleanedContent = analyzer.cleanForLinesOfCodeCalculations(sourceFile);
@@ -31,9 +30,7 @@ public class TSqlAnalyzerTest {
     }
 
     @Test
-    @Ignore
     public void cleanForDuplicationCalculations() {
-
         SourceFile sourceFile = new SourceFile(new File("test_duplicate.tsql"), TSqlExamples.CONTENT_2);
 
         CleanedContent cleanedContent = analyzer.cleanForDuplicationCalculations(sourceFile);
@@ -42,15 +39,14 @@ public class TSqlAnalyzerTest {
     }
 
     @Test
-    @Ignore
     public void extractUnits1() {
         TSqlAnalyzer analyzer = new TSqlAnalyzer();
         SourceFile sourceFile = new SourceFile(new File("test_units1.tsql"), TSqlExamples.CONTENT_3);
 
         List<UnitInfo> unitInfos = analyzer.extractUnits(sourceFile);
         assertEquals(1, unitInfos.size());
-        assertEquals("create_email_address", unitInfos.get(0).getShortName());
-        assertEquals(14, unitInfos.get(0).getLinesOfCode());
+        assertEquals("CreateEmailAddress", unitInfos.get(0).getShortName());
+        assertEquals(13, unitInfos.get(0).getLinesOfCode());
         assertEquals(2, unitInfos.get(0).getMcCabeIndex());
         assertEquals(4, unitInfos.get(0).getNumberOfParameters());
     }
@@ -60,6 +56,8 @@ public class TSqlAnalyzerTest {
     public void extractUnits2() {
         TSqlAnalyzer analyzer = new TSqlAnalyzer();
         SourceFile sourceFile = new SourceFile(new File("test_units2.tsql"), TSqlExamples.CONTENT_4);
+
+        System.out.println(sourceFile.getContent());
 
         List<UnitInfo> unitInfos = analyzer.extractUnits(sourceFile);
         assertEquals(2, unitInfos.size());

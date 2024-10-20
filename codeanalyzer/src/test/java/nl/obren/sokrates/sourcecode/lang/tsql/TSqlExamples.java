@@ -65,24 +65,24 @@ public class TSqlExamples {
             "DECLARE @c_name NVARCHAR(50), @c_addr NVARCHAR(100);\n" +
             "DECLARE @ex_invalid_id EXCEPTION;\n" +
             "BEGIN TRY\n" +
-            "    IF @c_id <= 0\n" +
-            "        THROW 50000, 'ID must be greater than zero!', 1;\n" +
-            "    ELSE\n" +
-            "    BEGIN\n" +
-            "        SELECT @c_name = name, @c_addr = address\n" +
-            "        FROM customers\n" +
-            "        WHERE id = @c_id;\n" +
-            "        PRINT 'Name: ' + @c_name;\n" +
-            "        PRINT 'Address: ' + @c_addr;\n" +
-            "    END\n" +
+            "IF @c_id <= 0\n" +
+            "THROW 50000, 'ID must be greater than zero!', 1;\n" +
+            "ELSE\n" +
+            "BEGIN\n" +
+            "SELECT @c_name = name, @c_addr = address\n" +
+            "FROM customers\n" +
+            "WHERE id = @c_id;\n" +
+            "PRINT 'Name: ' + @c_name;\n" +
+            "PRINT 'Address: ' + @c_addr;\n" +
+            "END\n" +
             "END TRY\n" +
             "BEGIN CATCH\n" +
-            "    IF ERROR_NUMBER() = 50000\n" +
-            "        PRINT ERROR_MESSAGE();\n" +
-            "    ELSE IF ERROR_NUMBER() = 104\n" +
-            "        PRINT 'No such customer!';\n" +
-            "    ELSE\n" +
-            "        PRINT 'Error!';\n" +
+            "IF ERROR_NUMBER() = 50000\n" +
+            "PRINT ERROR_MESSAGE();\n" +
+            "ELSE IF ERROR_NUMBER() = 104\n" +
+            "PRINT 'No such customer!';\n" +
+            "ELSE\n" +
+            "PRINT 'Error!';\n" +
             "END CATCH";
 
     public static final String CONTENT_3 = "CREATE PROCEDURE CreateEmailAddress\n" +
@@ -94,8 +94,7 @@ public class TSqlExamples {
             "BEGIN\n" +
             "    SET @email = @name1 + '.' + @name2 + '@' + @company;\n" +
             "    \n" +
-            "    -- T-SQL doesn't have a direct equivalent to VALUE_ERROR for string length,\n" +
-            "    -- but we might check length before setting or handle in the calling context.\n" +
+            "    -- This is where the logic happens:\n" +
             "    IF LEN(@email) > 150\n" +
             "    BEGIN\n" +
             "        PRINT 'Email address is too long.';\n" +
@@ -115,16 +114,31 @@ public class TSqlExamples {
             "AS\n" +
             "BEGIN\n" +
             "    DECLARE @i VARCHAR(15);\n" +
-            "    SET @i = (SELECT MIN(KeyColumn) FROM @aa);\n" +
+            "    \n" +
+            "    SELECT TOP 1 @i = KeyColumn FROM @aa ORDER BY KeyColumn;\n" +
             "    \n" +
             "    WHILE @i IS NOT NULL\n" +
             "    BEGIN\n" +
-            "        PRINT CONVERT(VARCHAR, (SELECT ValueColumn FROM @aa WHERE KeyColumn = @i)) + '  ' + @i;\n" +
-            "        SET @i = (SELECT MIN(KeyColumn) FROM @aa WHERE KeyColumn > @i);\n" +
+            "        PRINT CONVERT(VARCHAR(15), (SELECT ValueColumn FROM @aa WHERE KeyColumn = @i)) + '  ' + @i;\n" +
+            "        SELECT TOP 1 @i = KeyColumn \n" +
+            "        FROM @aa \n" +
+            "        WHERE KeyColumn > @i \n" +
+            "        ORDER BY KeyColumn;\n" +
             "    END\n" +
             "END;\n" +
             "\n" +
-            "-- Example usage would typically be in a separate script or procedure.\n";
+            "-- Example usage of the procedure\n" +
+            "DECLARE @aa_var aa_type;\n" +
+            "\n" +
+            "-- Insert values into the table variable\n" +
+            "INSERT INTO @aa_var (KeyColumn, ValueColumn)\n" +
+            "VALUES \n" +
+            "    ('zero', 0),\n" +
+            "    ('one', 1),\n" +
+            "    ('two', 2);\n" +
+            "\n" +
+            "-- Call the stored procedure with the table variable\n" +
+            "EXEC PrintAA @aa_var;\n";
 
     public static final String CONTENT_5 = "-- T-SQL does not support packages like PL/SQL. Instead, we create separate stored procedures.\n" +
             "\n" +

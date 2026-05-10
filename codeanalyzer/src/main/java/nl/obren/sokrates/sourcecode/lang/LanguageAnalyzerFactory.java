@@ -47,6 +47,7 @@ import nl.obren.sokrates.sourcecode.lang.shell.ShellAnalyzer;
 import nl.obren.sokrates.sourcecode.lang.sql.SqlAnalyzer;
 import nl.obren.sokrates.sourcecode.lang.swift.SwiftAnalyzer;
 import nl.obren.sokrates.sourcecode.lang.thrift.ThriftAnalyzer;
+import nl.obren.sokrates.sourcecode.lang.tsql.TSqlAnalyzer;
 import nl.obren.sokrates.sourcecode.lang.ts.TypeScriptAnalyzer;
 import nl.obren.sokrates.sourcecode.lang.vb.VisualBasicAnalyzer;
 import nl.obren.sokrates.sourcecode.lang.xml.XmlAnalyzer;
@@ -223,6 +224,7 @@ public class LanguageAnalyzerFactory {
         analyzersMap.put("kts", KotlinAnalyzer.class);
 
         registerSql();
+        registerTSql();
 
         // shell
         analyzersMap.put("sh", ShellAnalyzer.class);
@@ -427,6 +429,10 @@ public class LanguageAnalyzerFactory {
         analyzersMap.put("pkb", PlSqlAnalyzer.class);
         analyzersMap.put("plb", PlSqlAnalyzer.class);
 
+    }
+
+    private void registerTSql() {
+        analyzersMap.put("tsql", TSqlAnalyzer.class);
     }
 
     private void registerJson() {

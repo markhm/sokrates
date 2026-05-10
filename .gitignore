@@ -16,3 +16,9 @@ _sokrates/reports
 git-history.txt
 _sokrates/reports/
 
+# Personal tooling (do not include in upstream PRs)
+.claude/
+.fp/
+CLAUDE.md
+FP_CLAUDE.md
+

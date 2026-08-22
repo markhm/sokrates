@@ -40,12 +40,12 @@ public class SourceCodeAspectUtils {
         return maxFileCount;
     }
 
-    public static List<NamedSourceCodeAspect> getSourceCodeAspectBasedOnFolderDepth(String srcRoot, List<SourceFile>
+    public static List<NamedSourceCodeAspect> getSourceCodeAspectBasedOnFolderDepth(List<SourceFile>
             sourceFiles, int depth, int minComponentCount) {
 
         List<NamedSourceCodeAspect> aspects = new ArrayList<>();
         for (int currentDepth = Math.max(1, depth); currentDepth <= MAX_SEARCH_DEPTH; currentDepth++) {
-            aspects = getComponentsBasedOnFolderDepth(srcRoot, sourceFiles, currentDepth);
+            aspects = getComponentsBasedOnFolderDepth(sourceFiles, currentDepth);
             int count = aspects.size();
             if (count >= minComponentCount) {
                 break;
@@ -54,7 +54,9 @@ public class SourceCodeAspectUtils {
         return aspects;
     }
 
-    public static List<NamedSourceCodeAspect> getComponentsBasedOnFolderDepth(String srcRoot, List<SourceFile>
+    // No srcRoot parameter: the generated patterns must live in the same space as the path
+    // SourceFileFilter matches, which is now relative to the source root (see getMatchablePath).
+    public static List<NamedSourceCodeAspect> getComponentsBasedOnFolderDepth(List<SourceFile>
             sourceFiles, int depth) {
         List<String> paths = getUniquePaths(sourceFiles, depth);
 
@@ -69,13 +71,13 @@ public class SourceCodeAspectUtils {
             }
             aspectName = StringUtils.defaultIfBlank(aspectName, "ROOT");
             NamedSourceCodeAspect aspect = new NamedSourceCodeAspect(aspectName);
-            String pathPattern = srcRoot + "/" + path + "/" + ".*";
+            String pathPattern = "/" + path + "/" + ".*";
             pathPattern = pathPattern.replace("//", "/");
             aspect.getSourceFileFilters().add(new SourceFileFilter(pathPattern, ""));
 
             paths.forEach(otherPath -> {
                 if (!path.equals(otherPath)) {
-                    addExclusiveFilterIfNeeded(path, otherPath, srcRoot, aspect);
+                    addExclusiveFilterIfNeeded(path, otherPath, aspect);
                 }
             });
 
@@ -85,10 +87,10 @@ public class SourceCodeAspectUtils {
         return aspects;
     }
 
-    private static void addExclusiveFilterIfNeeded(String path, String otherPath, String srcRoot, NamedSourceCodeAspect
+    private static void addExclusiveFilterIfNeeded(String path, String otherPath, NamedSourceCodeAspect
             aspect) {
         if (otherPath.startsWith(path)) {
-            String otherPathPattern = srcRoot + "/" + otherPath + "/" + ".*";
+            String otherPathPattern = "/" + otherPath + "/" + ".*";
             SourceFileFilter otherSourceFileFilter = new SourceFileFilter(otherPathPattern, "");
             otherSourceFileFilter.setException(true);
             aspect.getSourceFileFilters().add(otherSourceFileFilter);

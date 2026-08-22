@@ -27,12 +27,11 @@ public class NamedSourceCodeAspectUtilsTest {
                 new SourceFile(new File("/root/subfolder/b/C.java"), "").relativize(new File("/root")),
                 new SourceFile(new File("/root/subfolder/b/D.java"), "").relativize(new File("/root"))
         );
-        String srcRoot = "/root";
-        assertEquals(SourceCodeAspectUtils.getSourceCodeAspectBasedOnFolderDepth(srcRoot, sourceFiles, 2, 0).size(), 2);
-        assertEquals(SourceCodeAspectUtils.getSourceCodeAspectBasedOnFolderDepth(srcRoot, sourceFiles, 2, 0).get(0).getName(), "a");
-        assertEquals(SourceCodeAspectUtils.getSourceCodeAspectBasedOnFolderDepth(srcRoot, sourceFiles, 2, 0).get(0).getSourceFileFilters().size(), 1);
-        assertEquals(SourceCodeAspectUtils.getSourceCodeAspectBasedOnFolderDepth(srcRoot, sourceFiles, 2, 0).get(1).getName(), "b");
-        assertEquals(SourceCodeAspectUtils.getSourceCodeAspectBasedOnFolderDepth(srcRoot, sourceFiles, 2, 0).get(1).getSourceFileFilters().size(), 1);
+        assertEquals(SourceCodeAspectUtils.getSourceCodeAspectBasedOnFolderDepth(sourceFiles, 2, 0).size(), 2);
+        assertEquals(SourceCodeAspectUtils.getSourceCodeAspectBasedOnFolderDepth(sourceFiles, 2, 0).get(0).getName(), "a");
+        assertEquals(SourceCodeAspectUtils.getSourceCodeAspectBasedOnFolderDepth(sourceFiles, 2, 0).get(0).getSourceFileFilters().size(), 1);
+        assertEquals(SourceCodeAspectUtils.getSourceCodeAspectBasedOnFolderDepth(sourceFiles, 2, 0).get(1).getName(), "b");
+        assertEquals(SourceCodeAspectUtils.getSourceCodeAspectBasedOnFolderDepth(sourceFiles, 2, 0).get(1).getSourceFileFilters().size(), 1);
     }
 
     @Test
@@ -41,12 +40,11 @@ public class NamedSourceCodeAspectUtilsTest {
                 new SourceFile(new File("/root/prefixABC/A.java"), "").relativize(new File("/root")),
                 new SourceFile(new File("/root/prefixDEF/B.java"), "").relativize(new File("/root"))
         );
-        String srcRoot = "/root";
-        assertEquals(SourceCodeAspectUtils.getSourceCodeAspectBasedOnFolderDepth(srcRoot, sourceFiles, 2, 0).size(), 2);
-        assertEquals(SourceCodeAspectUtils.getSourceCodeAspectBasedOnFolderDepth(srcRoot, sourceFiles, 2, 0).get(0).getName(), "prefixABC");
-        assertEquals(SourceCodeAspectUtils.getSourceCodeAspectBasedOnFolderDepth(srcRoot, sourceFiles, 2, 0).get(0).getSourceFileFilters().size(), 1);
-        assertEquals(SourceCodeAspectUtils.getSourceCodeAspectBasedOnFolderDepth(srcRoot, sourceFiles, 2, 0).get(1).getName(), "prefixDEF");
-        assertEquals(SourceCodeAspectUtils.getSourceCodeAspectBasedOnFolderDepth(srcRoot, sourceFiles, 2, 0).get(1).getSourceFileFilters().size(), 1);
+        assertEquals(SourceCodeAspectUtils.getSourceCodeAspectBasedOnFolderDepth(sourceFiles, 2, 0).size(), 2);
+        assertEquals(SourceCodeAspectUtils.getSourceCodeAspectBasedOnFolderDepth(sourceFiles, 2, 0).get(0).getName(), "prefixABC");
+        assertEquals(SourceCodeAspectUtils.getSourceCodeAspectBasedOnFolderDepth(sourceFiles, 2, 0).get(0).getSourceFileFilters().size(), 1);
+        assertEquals(SourceCodeAspectUtils.getSourceCodeAspectBasedOnFolderDepth(sourceFiles, 2, 0).get(1).getName(), "prefixDEF");
+        assertEquals(SourceCodeAspectUtils.getSourceCodeAspectBasedOnFolderDepth(sourceFiles, 2, 0).get(1).getSourceFileFilters().size(), 1);
     }
 
     @Test

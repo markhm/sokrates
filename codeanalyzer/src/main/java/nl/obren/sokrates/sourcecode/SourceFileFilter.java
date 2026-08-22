@@ -118,8 +118,31 @@ public class SourceFileFilter {
     }
 
     public boolean matches(SourceFile sourceFile) {
-        return pathMatches(sourceFile.getFile().getPath()) &&
+        return pathMatches(getMatchablePath(sourceFile)) &&
                 (StringUtils.isBlank(contentPattern) || contentMatches(sourceFile.getLines()));
+    }
+
+    // The path a pattern is matched against: relative to the source root, with a leading separator.
+    //
+    // It used to be getFile().getPath(), the path accumulated while walking down from srcRoot. That
+    // string carries every directory ABOVE the source root, so those directories took part in
+    // matching: a repository checked out under a folder named "docs" matched the standard
+    // ".*/docs/.*" ignore rule with every one of its files, and analysed to nothing.
+    //
+    // The leading separator keeps existing patterns meaning what they mean today. Patterns are
+    // written anchored - ".*/pom[.]xml", ".*/docs/.*" - and a bare relative path would stop matching
+    // the ones at the root of the repository ("pom.xml" has no separator for ".*/" to match). With
+    // the separator, a root-level file is matched as "/pom.xml" and an in-repository docs folder as
+    // "/docs/x.md", exactly as before, while a directory outside the repository can no longer appear
+    // in the string at all.
+    private static String getMatchablePath(SourceFile sourceFile) {
+        String relativePath = sourceFile.getRelativePath();
+        if (StringUtils.isBlank(relativePath)) {
+            // Not relativized against a source root (source files built directly from a File). Nothing
+            // better is available, so match what the old code matched.
+            return sourceFile.getFile().getPath();
+        }
+        return "/" + relativePath;
     }
 
     public boolean pathMatches(String path) {

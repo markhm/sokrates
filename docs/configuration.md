@@ -80,6 +80,23 @@ A **`SourceFileFilter`** has: `pathPattern` (regex on the file path), `contentPa
 a line of code), `exception` (`true` flips it into an *exclude* rule), and an optional `note`.
 The same filter shape is reused throughout the config (`ignore`, decomposition filters, concerns).
 
+**Which path `pathPattern` sees.** The path is the one *relative to `srcRoot`*, with a leading
+separator, and it must match in full:
+
+| file, relative to `srcRoot` | matched as |
+| --- | --- |
+| `pom.xml` | `/pom.xml` |
+| `src/main/App.java` | `/src/main/App.java` |
+
+Two consequences worth knowing:
+
+- **Nothing above `srcRoot` is visible to a pattern.** Where the repository is checked out cannot
+  change how its files are classified, so a repository living under a folder named `docs` is not
+  swept up by a `.*/docs/.*` rule.
+- **Anchor with `.*/` to match at any depth**, including the root: `.*/pom[.]xml` matches
+  `/pom.xml` and `/server/pom[.]xml` alike. A pattern written without it — `pom[.]xml` — matches
+  nothing, because the path it is matched against always starts with a separator.
+
 ### `logicalDecompositions`
 
 Groups `main` files into components and renders their dependencies. The default decomposition

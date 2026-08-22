@@ -132,7 +132,6 @@ public class LogicalDecomposition {
         List<SourceFile> filteredSourceFiles = getSourceFiles(codeConfiguration);
         if (componentsFolderDepth > 0) {
             components.addAll(SourceCodeAspectUtils.getSourceCodeAspectBasedOnFolderDepth(
-                    CodeConfiguration.getAbsoluteSrcRoot(codeConfiguration.getSrcRoot(), codeConfigurationFile),
                     filteredSourceFiles, componentsFolderDepth, minComponentsCount));
         }
 

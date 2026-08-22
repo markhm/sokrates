@@ -6,12 +6,80 @@ package nl.obren.sokrates.sourcecode;
 
 import org.junit.Test;
 
+import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 
 import static junit.framework.TestCase.*;
 
 public class SourceFileFilterTest {
+
+    /**
+     * Builds the source file the way the scan does: SourceCodeFiles.addFile descends with
+     * File.listFiles(), so a child's path is the parent's path plus a separator plus its name - and an
+     * empty parent path yields a bare name, not a leading separator, which is exactly the case that
+     * made a bare relative -confFile classify differently. new File(parent, child) would insert one
+     * and hide it, so the path is joined here the way listFiles() produces it.
+     */
+    private static SourceFile fileUnder(File sourceRoot, String relativePath) {
+        String rootPath = sourceRoot.getPath();
+        File file = new File(rootPath.isEmpty() ? relativePath : rootPath + File.separator + relativePath);
+        return new SourceFile(file).relativize(sourceRoot);
+    }
+
+    /**
+     * The defect this class's matching was changed for: patterns used to be matched against the path
+     * accumulated while walking down from the source root, which carries every directory ABOVE it. A
+     * repository checked out under a folder named "docs" therefore matched the standard ".*&#47;docs/.*"
+     * ignore rule with every one of its files, and the analysis reported nothing at all.
+     */
+    @Test
+    public void aDirectoryAboveTheSourceRootDoesNotTakePartInMatching() {
+        SourceFileFilter ignoreDocs = new SourceFileFilter(".*/docs/.*", "");
+
+        assertFalse("a repository under a folder named \"docs\" must not be ignored wholesale",
+                ignoreDocs.matches(fileUnder(new File("/home/alice/docs/myrepo"), "src/Main.java")));
+        assertFalse(ignoreDocs.matches(fileUnder(new File("/var/test/myrepo"), "src/Main.java")));
+
+        // ... while the repository's OWN docs folder is still ignored, which is what the rule is for.
+        assertTrue(ignoreDocs.matches(fileUnder(new File("/home/alice/myrepo"), "docs/guide.md")));
+        assertTrue(ignoreDocs.matches(fileUnder(new File("/home/alice/docs/myrepo"), "docs/guide.md")));
+    }
+
+    /**
+     * The reason the matched path keeps a leading separator rather than being the bare relative path.
+     * Conventions are written anchored (".*&#47;pom[.]xml"), and a bare "pom.xml" has no separator for
+     * ".*&#47;" to match - so every root-level rule in ScopingConventions, and every one in a user's own
+     * configuration, would silently stop firing.
+     */
+    @Test
+    public void aPatternAnchoredWithASeparatorStillMatchesAFileAtTheRoot() {
+        File sourceRoot = new File("/home/alice/myrepo");
+
+        assertTrue(new SourceFileFilter(".*/pom[.]xml", "").matches(fileUnder(sourceRoot, "pom.xml")));
+        assertTrue(new SourceFileFilter(".*/pom[.]xml", "").matches(fileUnder(sourceRoot, "sub/pom.xml")));
+        assertTrue(new SourceFileFilter(".*/[.]gitignore", "").matches(fileUnder(sourceRoot, ".gitignore")));
+
+        // The converse, which is what makes the anchoring worth documenting: the matched path always
+        // begins with a separator, so a pattern written without one matches nothing at all.
+        assertFalse(new SourceFileFilter("pom[.]xml", "").matches(fileUnder(sourceRoot, "pom.xml")));
+    }
+
+    /**
+     * The symptom originally reported: the same repository at the same commit classified differently
+     * depending on how the CLI was invoked, because the walked path differed between invocations while
+     * the file did not. Relativized paths are identical however the source root was expressed.
+     */
+    @Test
+    public void theSameFileMatchesTheSameWayHoweverTheSourceRootWasExpressed() {
+        SourceFileFilter buildFilter = new SourceFileFilter(".*/pom[.]xml", "");
+
+        assertTrue(buildFilter.matches(fileUnder(new File("/home/alice/myrepo"), "pom.xml")));
+        assertTrue(buildFilter.matches(fileUnder(new File("myrepo"), "pom.xml")));
+        assertTrue(buildFilter.matches(fileUnder(new File(""), "pom.xml")));
+        assertTrue(buildFilter.matches(fileUnder(new File("."), "pom.xml")));
+    }
+
     @Test
     public void testPathMatches() throws Exception {
         assertTrue(new SourceFileFilter("/root/a/b.*", "").pathMatches("/root/a/b/c"));

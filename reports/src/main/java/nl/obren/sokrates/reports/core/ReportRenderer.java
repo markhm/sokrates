@@ -4,6 +4,7 @@
 
 package nl.obren.sokrates.reports.core;
 
+import nl.obren.sokrates.reports.utils.HtmlEscapeUtils;
 import nl.obren.sokrates.sourcecode.Link;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
@@ -140,14 +141,25 @@ public class ReportRenderer {
     // A copy is also kept in a hidden <script> keyed by the graph id: mermaid.js replaces the <pre>
     // content with rendered SVG, so the original source must live somewhere it won't touch for the
     // client-side "download .mmd" link (see ReportConstants.downloadMermaid) to read it back.
+    // Both copies are HTML-escaped. This is defense in depth: GraphvizDependencyRenderer already
+    // writes every repository-controlled label with Mermaid entity codes, so in practice only the
+    // ">" of "-->" (and quotes) are rewritten here, and the browser hands mermaid.js the same text
+    // it did before (it reads the <pre> via innerHTML, which re-serializes text as entities anyway).
+    // What the escaping guarantees is that no future definition can put a live tag into the page.
+    // The <script> stash holds the same escaped text; downloadMermaid decodes it before download.
     static String mermaidBlock(String id, String mermaidDefinition) {
+        String escaped = escapeMermaidText(mermaidDefinition);
         StringBuilder sb = new StringBuilder();
         if (StringUtils.isNotBlank(id)) {
             sb.append("<script type=\"text/plain\" class=\"mermaid-source\" id=\"mermaid-source-")
                     .append(id).append("\">\n")
-                    .append(mermaidDefinition).append("\n</script>\n");
+                    .append(escaped).append("\n</script>\n");
         }
-        sb.append("<pre class=\"mermaid\">\n").append(mermaidDefinition).append("\n</pre>\n");
+        sb.append("<pre class=\"mermaid\">\n").append(escaped).append("\n</pre>\n");
         return sb.toString();
+    }
+
+    public static String escapeMermaidText(String mermaidDefinition) {
+        return HtmlEscapeUtils.escape(mermaidDefinition);
     }
 }

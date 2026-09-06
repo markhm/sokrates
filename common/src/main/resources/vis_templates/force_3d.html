@@ -137,7 +137,8 @@
         .height(container.clientHeight)
         .nodeRelSize(4)
         .nodeVal(n => Math.max(20 * n.size / maxNodeSize, 0.001))
-        .nodeLabel(n => n.id + " (" + n.size + ")")
+        // force-graph renders nodeLabel as HTML (tooltip innerHTML); ids are repository-controlled.
+        .nodeLabel(n => escapeHtml(n.id) + " (" + n.size + ")")
         .nodeColor(n => n.id.startsWith("[") ? "skyblue" : "")
         .linkDirectionalParticles(6)
         .linkDirectionalParticleSpeed(d => d.count / maxCount * 0.01)
@@ -223,7 +224,8 @@
     }
 
     function escapeHtml(s) {
-        return ('' + s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        // Attribute-safe (both quotes), so the same helper serves element content and title="…"/href="…".
+        return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
     }
 
     function escapeAttr(s) {

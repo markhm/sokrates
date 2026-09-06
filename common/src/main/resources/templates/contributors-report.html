@@ -197,7 +197,8 @@
     }
 
     function esc(s) {
-        return ('' + (s == null ? '' : s)).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+        // Attribute-safe (both quotes), so the same helper serves element content and title="…"/href="…".
+        return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
     }
 
     function pct(part, whole) {
@@ -256,7 +257,7 @@
         let nameHtml;
         if (c.userName && c.email && c.userName !== c.email) {
             nameHtml = esc(c.userName)
-                + '<div title="' + c.email + '" style="color: grey; font-size: 80%; max-width: 350px; overflow: hidden; white-space; no-wrap; ">&lt;' + esc(c.email) + '&gt;</div>';
+                + '<div title="' + esc(c.email) + '" style="color: grey; font-size: 80%; max-width: 350px; overflow: hidden; white-space; no-wrap; ">&lt;' + esc(c.email) + '&gt;</div>';
         } else {
             nameHtml = esc(c.userName || c.email);
         }

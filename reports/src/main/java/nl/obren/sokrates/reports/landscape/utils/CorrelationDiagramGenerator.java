@@ -1,6 +1,7 @@
 package nl.obren.sokrates.reports.landscape.utils;
 
 import nl.obren.sokrates.reports.core.RichTextReport;
+import nl.obren.sokrates.reports.utils.HtmlEscapeUtils;
 import nl.obren.sokrates.reports.utils.ToStringFunction;
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 
@@ -84,7 +85,8 @@ public class CorrelationDiagramGenerator<T> {
                 }
                 sameLocationMap.put(key, key);
                 report.addHtmlContent(" <circle cx=\"" + (int) x + "\" cy=\"" + (int) y + "\" r=\"" + r + "\" fill=\"black\" fill-opacity=\"0.2\">");
-                report.addHtmlContent(" <title>" + nameFunction.toString(item)
+                // The point label is a file path or a contributor identity — repository-controlled.
+                report.addHtmlContent(" <title>" + HtmlEscapeUtils.escape(nameFunction.toString(item))
                         + "\n  x: " + (int) xValue + " " + xLabel
                         + "\n  y: " + (int) yValue + " " + yLabel + "</title>");
                 report.addHtmlContent(" </circle>");

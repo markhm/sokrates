@@ -2,6 +2,7 @@ package nl.obren.sokrates.reports.generators.explorers;
 
 import nl.obren.sokrates.common.renderingutils.ExplorerTemplate;
 import nl.obren.sokrates.reports.utils.DataImageUtils;
+import nl.obren.sokrates.reports.utils.HtmlEscapeUtils;
 import nl.obren.sokrates.sourcecode.SourceFile;
 import nl.obren.sokrates.sourcecode.analysis.results.CodeAnalysisResults;
 import nl.obren.sokrates.sourcecode.aspects.NamedSourceCodeAspect;
@@ -75,7 +76,7 @@ public class FilesExplorerGenerators {
                 }
                 // Link to the cached source page only for files that actually have one.
                 if (referencedFiles.contains(file)) {
-                    fileExport.setSourceFileLink("../src/viewer.html#aspect=" + cacheFolder + "&file=" + file.getRelativePath());
+                    fileExport.setSourceFileLink(HtmlEscapeUtils.viewerFileHref(cacheFolder, file.getRelativePath()));
                 }
                 files.add(fileExport);
             }

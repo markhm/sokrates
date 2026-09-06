@@ -8,11 +8,11 @@ import nl.obren.sokrates.common.renderingutils.RichTextRenderingUtils;
 import nl.obren.sokrates.common.utils.FormattingUtils;
 import nl.obren.sokrates.reports.charts.SimpleOneBarChart;
 import nl.obren.sokrates.reports.core.RichTextReport;
+import nl.obren.sokrates.reports.utils.HtmlEscapeUtils;
 import nl.obren.sokrates.sourcecode.SourceFileFilter;
 import nl.obren.sokrates.sourcecode.aspects.NamedSourceCodeAspect;
 import nl.obren.sokrates.sourcecode.metrics.NumericMetric;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.text.StringEscapeUtils;
 
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
@@ -170,11 +170,11 @@ public class ScopesRenderer {
                             double firstPercentage = 100.0 * firstMetric.getValue().doubleValue() / linesCount;
                             DecimalFormat decimalFormat = new DecimalFormat("##.##");
                             decimalFormat.setDecimalFormatSymbols(new DecimalFormatSymbols(Locale.ENGLISH));
-                            report.addListItem("\"" + firstMetric.getName() + "\" is biggest, containing <b>" + decimalFormat.format(firstPercentage) + "%</b> of " + metric + ".");
+                            report.addListItem("\"" + HtmlEscapeUtils.escape(firstMetric.getName()) + "\" is biggest, containing <b>" + decimalFormat.format(firstPercentage) + "%</b> of " + metric + ".");
                             if (renderingList.size() >= 2) {
                                 NumericMetric lastMetric = renderingList.get(renderingList.size() - 1).getLinesOfCode();
                                 double lastPercentage = 100.0 * lastMetric.getValue().doubleValue() / linesCount;
-                                report.addListItem("\"" + lastMetric.getName() + "\" is smallest, containing <b>" + decimalFormat.format(lastPercentage) + "%</b> of " + metric + ".");
+                                report.addListItem("\"" + HtmlEscapeUtils.escape(lastMetric.getName()) + "\" is smallest, containing <b>" + decimalFormat.format(lastPercentage) + "%</b> of " + metric + ".");
                             }
                             report.endUnorderedList();
                         }
@@ -236,7 +236,7 @@ public class ScopesRenderer {
 
             report.addContentInDiv(chart.getPercentageSvg(percentage, rendererItem.getLinesOfCode().getName(),
                     "" + metricLinesOfCode + " " + metric + " (" +
-                            StringEscapeUtils.escapeHtml4(FormattingUtils.getFormattedPercentage(percentage))
+                            HtmlEscapeUtils.escape(FormattingUtils.getFormattedPercentage(percentage))
                             + "%) " + filesFragment), "");
         });
         report.endDiv();
@@ -320,14 +320,14 @@ public class ScopesRenderer {
             report.addListItem(filesFragment + " match" + (filesCount == 1 ? "es" : "") + " defined criteria (" +
                     "<b>" + RichTextRenderingUtils.renderNumber(linesCount) + "</b> " + metric + ", "
                     + "<b>" + RichTextRenderingUtils.renderNumber(linesOfCodeInMain > 0 ? 100.0 * linesCount / linesOfCodeInMain : 0) + "%</b> vs. main code)"
-                    + (fileCountPerComponent.size() == 1 ? ". All matches are in " + fileCountPerComponent.get(0).getName() + " files." : ":"));
+                    + (fileCountPerComponent.size() == 1 ? ". All matches are in " + HtmlEscapeUtils.escape(fileCountPerComponent.get(0).getName()) + " files." : ":"));
             report.startUnorderedList();
             if (fileCountPerComponent.size() > 1) {
                 for (int i = 0; i < fileCountPerComponent.size(); i++) {
                     NumericMetric fileCountMetric = fileCountPerComponent.get(i);
                     NumericMetric linesOfCodeMetric = linesOfCode.get(i);
                     report.addListItem("<b>" + RichTextRenderingUtils.renderNumber(fileCountMetric.getValue().intValue()) + "</b>"
-                            + " " + fileCountMetric.getName() + " files"
+                            + " " + HtmlEscapeUtils.escape(fileCountMetric.getName()) + " files"
                             + " (<b>" + RichTextRenderingUtils.renderNumber(linesOfCodeMetric.getValue().intValue()) + "</b> " + metric + ")");
                 }
             }

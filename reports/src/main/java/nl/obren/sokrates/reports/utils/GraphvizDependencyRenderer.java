@@ -174,9 +174,18 @@ public class GraphvizDependencyRenderer {
 
     // Mermaid node ids must be safe tokens (no quotes/spaces/special chars), unlike DOT's quoted
     // labels. We assign synthetic ids (n0, n1, ...) and keep the real component name in the node
-    // label only. Labels are wrapped in double quotes and inner quotes escaped per Mermaid rules.
-    private static String escapeMermaidLabel(String label) {
-        return label.replace("\"", "&quot;");
+    // label only. Labels are wrapped in double quotes; the characters Mermaid would otherwise read
+    // as syntax or, since it renders labels as HTML, as markup are written as Mermaid entity codes
+    // (#quot; #lt; #gt; #amp;), which mermaid.js decodes back to the literal character. The names
+    // are repository-controlled (component/folder/file names), so the definition must never carry
+    // a raw < or >. Known limit: mermaid's entity pre-pass first strips the trailing ";" of any
+    // "style…:…#…;" run on a line, so a label such as "freestyle:R&D" renders as "freestyle:R#ampD".
+    // Cosmetic and rare; the alternative (raw characters) is what this method exists to prevent.
+    static String escapeMermaidLabel(String label) {
+        return label.replace("&", "#amp;")
+                .replace("\"", "#quot;")
+                .replace("<", "#lt;")
+                .replace(">", "#gt;");
     }
 
     // Map the few Graphviz X11 colour names used by callers to CSS-valid colours; hex values and

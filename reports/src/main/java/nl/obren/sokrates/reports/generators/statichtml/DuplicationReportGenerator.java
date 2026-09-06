@@ -11,6 +11,7 @@ import nl.obren.sokrates.reports.landscape.utils.Force3DGraphExporter;
 import nl.obren.sokrates.reports.utils.DataImageUtils;
 import nl.obren.sokrates.reports.utils.DuplicationReportUtils;
 import nl.obren.sokrates.reports.utils.GraphvizDependencyRenderer;
+import nl.obren.sokrates.reports.utils.HtmlEscapeUtils;
 import nl.obren.sokrates.sourcecode.SourceFile;
 import nl.obren.sokrates.sourcecode.analysis.results.CodeAnalysisResults;
 import nl.obren.sokrates.sourcecode.analysis.results.DuplicationAnalysisResults;
@@ -73,7 +74,7 @@ public class DuplicationReportGenerator {
                     "<div style='white-space: nowrap;'><div style='display: inline-block; vertical-align: top; margin-top: 3px; margin-right: 4px;'>" +
                     DataImageUtils.getLangDataImageDiv30(extension) +
                     "</div><div style='display: inline-block;'>"
-                    + formatDisplayStringSimple(instance.getFilesDisplayString(cacheSourceFiles))
+                    + getFilesDisplayHtml(instance, cacheSourceFiles)
                     + "</div></div></td>");
             report.addHtmlContent("<td>" + formatDisplayString(instance.getLinesDisplayString()) + "</td>");
             if (saveCodeFragments) {
@@ -87,17 +88,42 @@ public class DuplicationReportGenerator {
         report.endDiv();
     }
 
-    private String formatDisplayStringSimple(String text) {
-        return text.replace("\n", "</br>");
+    // One line per duplicated block (the first MAX_NUMBER_OF_SAMPLES_FOR_DISPLAY, then "..."): the file name,
+    // linked to the cached source when it is saved. File names and paths are repository-controlled,
+    // so they are escaped here (element content) and the viewer link is percent-encoded — the
+    // report owns this HTML rather than DuplicationInstance, which only knows plain text.
+    static String getFilesDisplayHtml(DuplicationInstance instance, boolean linkToFiles) {
+        StringBuilder html = new StringBuilder();
+        List<DuplicatedFileBlock> blocks = instance.getDuplicatedFileBlocks();
+        int shown = Math.min(blocks.size(), DuplicationInstance.MAX_NUMBER_OF_SAMPLES_FOR_DISPLAY);
+        for (int i = 0; i < shown; i++) {
+            if (i > 0) {
+                html.append("</br>");
+            }
+            SourceFile sourceFile = blocks.get(i).getSourceFile();
+            String fileName = sourceFile.getFile().getName();
+            String name = HtmlEscapeUtils.escape(StringUtils.abbreviate(fileName, 40));
+            if (linkToFiles) {
+                html.append("<a href='").append(HtmlEscapeUtils.viewerFileHref("main", sourceFile.getRelativePath()))
+                        .append("' target='_blank'>").append(name).append("</a>");
+            } else {
+                html.append("<span title='").append(HtmlEscapeUtils.escape(fileName)).append("'>").append(name).append("</span>");
+            }
+        }
+        if (blocks.size() > DuplicationInstance.MAX_NUMBER_OF_SAMPLES_FOR_DISPLAY) {
+            html.append("</br>...");
+        }
+        return html.toString();
     }
 
+    // Each line (a folder path or a line range) is repository-derived text: escaped for both the
+    // title attribute and the abbreviated content, before spaces become &nbsp;.
     private String formatDisplayString(String text) {
-        text = text.replace(" ", "&nbsp;");
         StringBuilder stringBuilder = new StringBuilder();
         for (String line : text.split("\n")) {
             stringBuilder
-                    .append("<span title='" + line + "'>")
-                    .append(StringUtils.abbreviateMiddle(line, "...", 50))
+                    .append("<span title='" + HtmlEscapeUtils.escape(line).replace(" ", "&nbsp;") + "'>")
+                    .append(HtmlEscapeUtils.escape(StringUtils.abbreviateMiddle(line, "...", 50)).replace(" ", "&nbsp;"))
                     .append("</span>")
                     .append("\n");
         }
@@ -390,10 +416,10 @@ public class DuplicationReportGenerator {
 
             String formattedPercentageFrom = FormattingUtils.getFormattedPercentage(componentDependency.getValueFrom());
             String formattedPercentageTo = FormattingUtils.getFormattedPercentage(componentDependency.getValueTo());
-            report.addTableCell(componentDependency.getFromComponent()
+            report.addTableCell(HtmlEscapeUtils.escape(componentDependency.getFromComponent())
                     + (!formattedPercentageFrom.equals("0") ? " (" + formattedPercentageFrom + "%)" : "")
                     + "<br/>&nbsp&nbsp;-->&nbsp"
-                    + componentDependency.getToComponent() + (!formattedPercentageTo.equals("0") ? " (" + formattedPercentageTo + "%)" : ""));
+                    + HtmlEscapeUtils.escape(componentDependency.getToComponent()) + (!formattedPercentageTo.equals("0") ? " (" + formattedPercentageTo + "%)" : ""));
 
             report.addTableCell(componentDependency.getCount() + "", "text-align: center");
 

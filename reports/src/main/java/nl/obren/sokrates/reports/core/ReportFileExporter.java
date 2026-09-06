@@ -9,6 +9,7 @@ import nl.obren.sokrates.reports.generators.statichtml.CommitsReportGenerator;
 import nl.obren.sokrates.reports.generators.statichtml.ContributorsReportUtils;
 import nl.obren.sokrates.reports.generators.statichtml.HistoryPerLanguageGenerator;
 import nl.obren.sokrates.reports.utils.DataImageUtils;
+import nl.obren.sokrates.reports.utils.HtmlEscapeUtils;
 import nl.obren.sokrates.reports.utils.HtmlTemplateUtils;
 import nl.obren.sokrates.reports.utils.PromptsUtils;
 import nl.obren.sokrates.sourcecode.Link;
@@ -21,7 +22,6 @@ import nl.obren.sokrates.sourcecode.contributors.ContributionTimeSlot;
 import nl.obren.sokrates.sourcecode.contributors.Contributor;
 import nl.obren.sokrates.sourcecode.core.CodeConfiguration;
 import nl.obren.sokrates.sourcecode.core.CustomTab;
-import org.apache.commons.text.StringEscapeUtils;
 import nl.obren.sokrates.sourcecode.core.CodeConfigurationUtils;
 import nl.obren.sokrates.sourcecode.filehistory.DateUtils;
 import nl.obren.sokrates.sourcecode.metrics.NumericMetric;
@@ -148,7 +148,7 @@ public class ReportFileExporter {
         indexReport.addTab("data", "Data", false);
         List<CustomTab> customTabs = getCustomTabs(analysisResults);
         for (int i = 0; i < customTabs.size(); i++) {
-            indexReport.addTab(customTabId(i), StringEscapeUtils.escapeHtml4(customTabs.get(i).getLabel()), false);
+            indexReport.addTab(customTabId(i), HtmlEscapeUtils.escape(customTabs.get(i).getLabel()), false);
         }
         indexReport.endDiv();
 
@@ -1076,7 +1076,7 @@ public class ReportFileExporter {
             summary.append("<div style='width: " + width + "px; text-align: center; display: inline-block; border-radius: 5px; background-color: white; padding: 8px; margin-right: 4px;'>"
                     + (first[0] ? DataImageUtils.getLangDataImageDiv64(lang) : DataImageUtils.getLangDataImageDiv42(lang))
                     + "<div style='margin-top: 3px; font-size: " + fontSize + "px'>" + numberLine + "</div>"
-                    + "<div style='font-size: 10px; white-space: no-wrap; overflow: hidden; color: grey;'>" + lang.toLowerCase() + "</div>"
+                    + "<div style='font-size: 10px; white-space: no-wrap; overflow: hidden; color: grey;'>" + HtmlEscapeUtils.escape(lang.toLowerCase()) + "</div>"
                     + "</div>");
             first[0] = false;
         });
@@ -1214,7 +1214,7 @@ public class ReportFileExporter {
     }
 
     static String customTabIframe(CustomTab tab) {
-        return "<iframe src='" + StringEscapeUtils.escapeHtml4(tab.getIframeLink().trim()) + "' style='width: 100%; border: none; height: calc(100vh - 220px); overflow: hidden; margin-top: -12px'></iframe>";
+        return "<iframe src='" + HtmlEscapeUtils.escape(tab.getIframeLink().trim()) + "' style='width: 100%; border: none; height: calc(100vh - 220px); overflow: hidden; margin-top: -12px'></iframe>";
     }
 
     private static void addExplorerFragment(RichTextReport indexReport, String explorer[]) {

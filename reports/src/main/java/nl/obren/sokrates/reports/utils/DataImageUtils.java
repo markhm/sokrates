@@ -360,11 +360,14 @@ public class DataImageUtils {
 
     public static String getLangDataImageDiv(String lang, int size, int fontSize1, int fontSize2, int padding1, int padding2) {
         String image = DataImageUtils.getLangDataImage(lang);
+        // The label is a file extension, i.e. repository-controlled: escaped for both the title
+        // attribute and the text bubble. The bubble's font size is chosen on the raw length.
+        int nameLength = lang.length();
+        lang = HtmlEscapeUtils.escape(lang);
         if (image != null) {
             return "<img title='" + lang + "' style=\"margin-right: 3px; vertical-align: top; background-color: #f1f1f1; border-radius: 50%; border: 1px solid #e5e7eb; width: " + size + "px; height: " + size + "px; object-fit: contain;\" src=\"" +
                     image + "\">";
         } else {
-            int nameLength = lang.length();
             return "<div title='" + lang + "' style=\"" +
                     "margin-right: 3px; display: inline-block; vertical-align: top; " +
                     "padding: auto; background-color: #f1f1f1; border-radius: 50%; border: 1px solid #e5e7eb; " +

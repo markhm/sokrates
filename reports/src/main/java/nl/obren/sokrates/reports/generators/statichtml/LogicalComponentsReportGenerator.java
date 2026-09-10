@@ -13,6 +13,7 @@ import nl.obren.sokrates.reports.core.RichTextReport;
 import nl.obren.sokrates.reports.dataexporters.DataExportUtils;
 import nl.obren.sokrates.reports.dataexporters.DataExporter;
 import nl.obren.sokrates.reports.utils.GraphvizDependencyRenderer;
+import nl.obren.sokrates.reports.utils.HtmlEscapeUtils;
 import nl.obren.sokrates.reports.utils.ScopesRenderer;
 import nl.obren.sokrates.sourcecode.SourceFileFilter;
 import nl.obren.sokrates.sourcecode.analysis.results.AspectAnalysisResults;
@@ -619,8 +620,7 @@ public class LogicalComponentsReportGenerator {
 
     private void addDependencyRow(LogicalDecompositionAnalysisResults logicalDecomposition, ComponentDependency componentDependency) {
         report.startTableRow();
-        report.addTableCell(componentDependency.getFromComponent() + "<br/>&nbsp&nbsp;-->&nbsp" + componentDependency.getToComponent()
-        );
+        report.addTableCell(HtmlEscapeUtils.escape(componentDependency.getFromComponent()) + "<br/>&nbsp&nbsp;-->&nbsp" + HtmlEscapeUtils.escape(componentDependency.getToComponent()));
         report.addHtmlContent("<td>");
         int locFromDuplications = componentDependency.getLocFrom();
         NamedSourceCodeAspect fromComponentByName = logicalDecomposition.getLogicalDecomposition().getComponentByName(componentDependency.getFromComponent());
@@ -632,7 +632,7 @@ public class LogicalComponentsReportGenerator {
 
         report.addDetailsBlock("",
                 "<textarea style='width:90%; height: 20em;'>"
-                        + componentDependency.getEvidence().stream().map(DependencyEvidence::getPathFrom).collect(Collectors.joining("\n")) +
+                        + HtmlEscapeUtils.escape(componentDependency.getEvidence().stream().map(DependencyEvidence::getPathFrom).collect(Collectors.joining("\n"))) +
                         "</textarea>",
                 (percentageHtmlFragment != null ? "" + percentageHtmlFragment : dependencyCount + " files (" + locFromDuplications + " LOC)<br/>")
         );

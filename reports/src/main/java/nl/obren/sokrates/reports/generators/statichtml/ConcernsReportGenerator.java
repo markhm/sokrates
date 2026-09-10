@@ -8,6 +8,7 @@ import nl.obren.sokrates.common.utils.FormattingUtils;
 import nl.obren.sokrates.reports.charts.SimpleOneBarChart;
 import nl.obren.sokrates.reports.core.RichTextReport;
 import nl.obren.sokrates.reports.dataexporters.DataExportUtils;
+import nl.obren.sokrates.reports.utils.HtmlEscapeUtils;
 import nl.obren.sokrates.reports.utils.ScopesRenderer;
 import nl.obren.sokrates.sourcecode.analysis.results.AspectAnalysisResults;
 import nl.obren.sokrates.sourcecode.analysis.results.CodeAnalysisResults;
@@ -62,7 +63,8 @@ public class ConcernsReportGenerator {
                         String svg = getOverviewCodePercentageSvg(concern, relativeConcernSizeInPerc,
                                 concern.getFilesCount(), concernLoc, 400, 20, fileListPath, isDerivedConcern(concern.getName()));
                         report.startDiv("");
-                        report.addContentInDiv(concern.getName());
+                        // Meta-concern names are extracted from source lines, so they are repository-controlled.
+                        report.addContentInDiv(HtmlEscapeUtils.escape(concern.getName()));
                         report.addHtmlContent(svg);
                         report.endDiv();
                     }
@@ -115,7 +117,7 @@ public class ConcernsReportGenerator {
                 + count + "</b> concern" + (count > 1 ? "s" : "") + ".");
 
         report.startUnorderedList();
-        concernsAnalysisResults.getConcerns().forEach(c -> report.addListItem(c.getName()));
+        concernsAnalysisResults.getConcerns().forEach(c -> report.addListItem(HtmlEscapeUtils.escape(c.getName())));
         report.endUnorderedList();
 
         report.endUnorderedList();
@@ -141,7 +143,8 @@ public class ConcernsReportGenerator {
         renderer.setLinesOfCodeInMain(codeAnalysisResults.getMainAspectAnalysisResults().getLinesOfCode());
 
         String title = "<span style='color: grey; font-size: 90%'>" + key + "</span><br>";
-        title += groupCounter + "." + concernCounter + " " + name.replace(" - ", " Multiple Classifications");
+        // The name is repository-controlled for meta-concerns; the title also feeds the "no files" message.
+        title += groupCounter + "." + concernCounter + " " + HtmlEscapeUtils.escape(name.replace(" - ", " Multiple Classifications"));
         renderer.setTitle(title);
         renderer.setDescription("");
         if (name.equalsIgnoreCase("Unclassified")) {

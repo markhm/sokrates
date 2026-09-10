@@ -39,6 +39,19 @@ class GraphvizDependencyRendererMermaidTest {
     }
 
     @Test
+    void labelsCarryNoMarkupOrQuotes() {
+        GraphvizDependencyRenderer r = new GraphvizDependencyRenderer();
+        String m = r.getMermaidContent(Arrays.asList("<img src=x onerror=XSS>", "a \"b\" & c"),
+                Collections.singletonList(dep("<img src=x onerror=XSS>", "a \"b\" & c", 1)));
+        // mermaid.js renders labels as HTML, so the definition may never hold a raw < or >; Mermaid's
+        // own entity codes are decoded back to the literal characters when rendering.
+        assertTrue(m.contains("n0[\"#lt;img src=x onerror=XSS#gt;\"]"), m);
+        assertTrue(m.contains("n1[\"a #quot;b#quot; #amp; c\"]"), m);
+        assertFalse(m.contains("<img"), m);
+        assertFalse(m.contains("&quot;"), m);
+    }
+
+    @Test
     void directedVsUndirectedConnector() {
         GraphvizDependencyRenderer digraph = new GraphvizDependencyRenderer();
         digraph.setTypeDigraph();
@@ -121,6 +134,6 @@ class GraphvizDependencyRendererMermaidTest {
         String m = r.getMermaidContent(Collections.singletonList("say \"hi\""),
                 Collections.emptyList());
         assertFalse(m.contains("\"say \"hi\"\""), "raw inner quotes would break the label");
-        assertTrue(m.contains("&quot;"), m);
+        assertTrue(m.contains("[\"say #quot;hi#quot;\"]"), m);
     }
 }

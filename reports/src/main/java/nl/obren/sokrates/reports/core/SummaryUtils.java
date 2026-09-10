@@ -8,9 +8,9 @@ import nl.obren.sokrates.common.renderingutils.RichTextRenderingUtils;
 import nl.obren.sokrates.common.renderingutils.charts.Palette;
 import nl.obren.sokrates.common.utils.FormattingUtils;
 import nl.obren.sokrates.reports.charts.SimpleOneBarChart;
-import org.apache.commons.text.StringEscapeUtils;
 import nl.obren.sokrates.reports.utils.AnimalIcons;
 import nl.obren.sokrates.reports.utils.DataImageUtils;
+import nl.obren.sokrates.reports.utils.HtmlEscapeUtils;
 import nl.obren.sokrates.reports.utils.HtmlTemplateUtils;
 import nl.obren.sokrates.reports.utils.ReportUtils;
 import nl.obren.sokrates.sourcecode.analysis.results.AspectAnalysisResults;
@@ -147,7 +147,7 @@ public class SummaryUtils {
             double percentage = totalLoc > 0 ? 100.0 * loc / totalLoc : 0;
             String formattedPercentage = FormattingUtils.getFormattedPercentage(percentage) + "%";
 
-            summary.append("<b>" + language + "</b> <span style='color:lightgrey'>(" + formattedPercentage + ")</span>");
+            summary.append("<b>" + HtmlEscapeUtils.escape(language) + "</b> <span style='color:lightgrey'>(" + formattedPercentage + ")</span>");
         });
         if (linesOfCodePerAspect.size() > 0) {
             summary.append("</span>");
@@ -299,7 +299,7 @@ public class SummaryUtils {
                 summary.append("<div class='infoBlock' style='width: 42px; text-align: center; display: inline-block; padding: 8px; margin-right: 4px;'>"
                         + DataImageUtils.getLangDataImageDiv30(lang)
                         + "<div style='margin-top: 3px; font-size: " + fontSize + "px'>" + FormattingUtils.getSmallTextForNumber(loc) + "</div>"
-                        + "<div class='infoBlockLabel' style='font-size: 10px; white-space: nowrap; overflow: hidden;'>" + lang.toLowerCase() + "</div>"
+                        + "<div class='infoBlockLabel' style='font-size: 10px; white-space: nowrap; overflow: hidden;'>" + HtmlEscapeUtils.escape(lang.toLowerCase()) + "</div>"
                         + "</div>");
                 if (image != null) {
                     alreadyAddedImage.add(image);
@@ -527,7 +527,7 @@ public class SummaryUtils {
             + "-webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow-wrap: anywhere; line-height: 1.3em; height: 2.6em";
 
     static String getFeatureOfInterestCard(String name, int fileCount) {
-        String escapedName = StringEscapeUtils.escapeHtml4(name);
+        String escapedName = HtmlEscapeUtils.escape(name);
         return "<div style='" + FEATURE_CARD_STYLE + "' title='" + escapedName + "'>"
                 + "<div style='" + FEATURE_CARD_NAME_STYLE + "'>" + escapedName + "</div>"
                 + "<span style='font-size: 85%; color: grey'>" + fileCount + " " + (fileCount == 1 ? "file" : "files") + "</span>"

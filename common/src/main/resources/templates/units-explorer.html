@@ -123,15 +123,15 @@
         const key = lang.toLowerCase();
         const size = 30;
         if (langIcons[key]) {
-            return '<img title="' + lang + '" style="margin-right: 5px; vertical-align: middle; background-color: #f1f1f1; '
+            return '<img title="' + escapeHtml(lang) + '" style="margin-right: 5px; vertical-align: middle; background-color: #f1f1f1; '
                 + 'border-radius: 50%; border: 1px solid lightgrey; width: ' + size + 'px; height: ' + size + 'px; object-fit: contain;" src="'
                 + langIcons[key] + '">';
         }
         const fontSize = lang.length <= 3 ? 9 : 8;
-        return '<div title="' + lang + '" style="margin-right: 5px; display: inline-block; vertical-align: middle; '
+        return '<div title="' + escapeHtml(lang) + '" style="margin-right: 5px; display: inline-block; vertical-align: middle; '
             + 'background-color: #D6E4E1; border-radius: 50%; border: 1px solid grey; overflow: hidden; color: darkblue; '
             + 'width: ' + size + 'px; height: ' + size + 'px; line-height: ' + size + 'px; '
-            + 'font-size: ' + fontSize + 'px; font-weight: bold; text-align: center;">' + lang + '</div>';
+            + 'font-size: ' + fontSize + 'px; font-weight: bold; text-align: center;">' + escapeHtml(lang) + '</div>';
     }
 
     let units = importedUnits.slice();
@@ -172,7 +172,8 @@
     }
 
     function escapeHtml(s) {
-        return ('' + s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        // Attribute-safe (both quotes), so the same helper serves element content and title="…"/href="…".
+        return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
     }
 
     function update(clickedKey) {

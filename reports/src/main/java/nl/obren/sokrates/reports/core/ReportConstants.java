@@ -313,7 +313,10 @@ public class ReportConstants {
             "        function downloadMermaid(id) {\n" +
             "          var el = document.getElementById('mermaid-source-' + id);\n" +
             "          if (!el) { return false; }\n" +
-            "          var text = el.textContent.replace(/^\\n/, '').replace(/\\n$/, '');\n" +
+            "          // The stash is HTML-escaped (see ReportRenderer.mermaidBlock); decode it back to text.\n" +
+            "          var decoder = document.createElement('textarea');\n" +
+            "          decoder.innerHTML = el.textContent;\n" +
+            "          var text = decoder.value.replace(/^\\n/, '').replace(/\\n$/, '');\n" +
             "          var blob = new Blob([text], { type: 'text/plain' });\n" +
             "          var url = URL.createObjectURL(blob);\n" +
             "          var a = document.createElement('a');\n" +
@@ -345,7 +348,7 @@ public class ReportConstants {
             "        // <details> show-more block or an inactive tab) has zero size and Mermaid 10 errors\n" +
             "        // with 'Syntax error in text'. We render each diagram only once its container is\n" +
             "        // actually visible: on load for visible ones, and on <details> toggle / tab open.\n" +
-            "        mermaid.initialize({ startOnLoad: false, securityLevel: 'loose', maxEdges: 1000, flowchart: { useMaxWidth: true } });\n" +
+            "        mermaid.initialize({ startOnLoad: false, securityLevel: 'strict', maxEdges: 1000, flowchart: { useMaxWidth: true } });\n" +
             "        function isVisible(el) { return !!(el.offsetParent || el.getClientRects().length); }\n" +
             "        window.renderMermaidIn = function (container) {\n" +
             "            var root = container || document;\n" +

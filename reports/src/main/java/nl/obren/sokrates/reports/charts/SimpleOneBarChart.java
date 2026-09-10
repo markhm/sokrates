@@ -5,6 +5,7 @@
 package nl.obren.sokrates.reports.charts;
 
 import nl.obren.sokrates.common.renderingutils.charts.Palette;
+import nl.obren.sokrates.reports.utils.HtmlEscapeUtils;
 
 import java.util.List;
 
@@ -69,7 +70,7 @@ public class SimpleOneBarChart {
         }
 
 
-        svg.append(getRightAlignedTextSvg(textLeft, barStartXOffset - 4));
+        svg.append(getRightAlignedTextSvg(HtmlEscapeUtils.escape(textLeft), barStartXOffset - 4));
         svg.append(getTextSvg(textRight, (barStartXOffset + 8 + maxBarWidth)));
 
         svg.append("</svg>");
@@ -111,7 +112,7 @@ public class SimpleOneBarChart {
 
         svg += getBackgroundBarSvg(maxBarWidth);
         svg += getBarSvg((int) (activeBarSize));
-        svg += getRightAlignedTextSvg(textLeft, barStartXOffset - 4);
+        svg += getRightAlignedTextSvg(HtmlEscapeUtils.escape(textLeft), barStartXOffset - 4);
         svg += getTextSvg(textRight, barStartXOffset + 8 + maxBarWidth);
 
         svg += "</svg>";
@@ -131,6 +132,9 @@ public class SimpleOneBarChart {
         this.fontSize = "smaller";
     }
 
+    // textLeft is plain text (a component, concern, extension or distribution name — repository-
+    // controlled) and is escaped by the callers above; textRight is HTML by contract (callers put
+    // links in it) and is emitted as is.
     private String getRightAlignedTextSvg(String text, int x) {
         return "<text text-anchor='end' " +
                 " font-size='" + this.fontSize + "' " +

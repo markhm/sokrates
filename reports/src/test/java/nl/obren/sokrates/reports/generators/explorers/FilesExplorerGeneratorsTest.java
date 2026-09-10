@@ -77,6 +77,17 @@ class FilesExplorerGeneratorsTest {
     }
 
     @Test
+    void percentEncodesViewerLinkForPathsWithFragmentDelimitersOrMarkup() {
+        FilesExplorerGenerators generators = new FilesExplorerGenerators(new File("."));
+        SourceFile referenced = sourceFile("src/odd #&% dir/<img src=x onerror=XSS>.ts", 100, null);
+        List<FileExport> files = generators.getFiles(
+                aspectOf(referenced), "main", new java.util.HashSet<>(Arrays.asList(referenced)));
+
+        assertEquals("../src/viewer.html#aspect=main&file=src/odd%20%23%26%25%20dir/%3Cimg%20src%3Dx%20onerror%3DXSS%3E.ts",
+                files.get(0).getSourceFileLink());
+    }
+
+    @Test
     void leavesViewerLinkEmptyForUnreferencedFiles() {
         FilesExplorerGenerators generators = new FilesExplorerGenerators(new File("."));
         List<FileExport> files = generators.getFiles(

@@ -9,6 +9,7 @@ import nl.obren.sokrates.reports.charts.SimpleOneBarChart;
 import nl.obren.sokrates.reports.core.RichTextReport;
 import nl.obren.sokrates.reports.dataexporters.DataExportUtils;
 import nl.obren.sokrates.reports.utils.DataImageUtils;
+import nl.obren.sokrates.reports.utils.HtmlEscapeUtils;
 import nl.obren.sokrates.reports.utils.ScopesRenderer;
 import nl.obren.sokrates.sourcecode.IgnoredFilesGroup;
 import nl.obren.sokrates.sourcecode.SourceFileFilter;
@@ -115,7 +116,7 @@ public class OverviewReportGenerator {
             String extensionString = extension.getName().replace("*.", "").trim().toLowerCase();
             LanguageAnalyzer analyzer = LanguageAnalyzerFactory.getInstance().getLanguageAnalyzerByExtension(extensionString);
 
-            report.addListItem("*." + extensionString + " files are analyzed with <b> " + analyzer.getClass().getSimpleName() + ":");
+            report.addListItem("*." + HtmlEscapeUtils.escape(extensionString) + " files are analyzed with <b> " + analyzer.getClass().getSimpleName() + ":");
             report.startUnorderedList("margin-bottom: 12px");
             analyzer.getFeaturesDescription().forEach(feature -> {
                 report.addListItem(feature);

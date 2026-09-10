@@ -2,6 +2,7 @@ package nl.obren.sokrates.reports.generators.statichtml;
 
 import nl.obren.sokrates.reports.core.RichTextReport;
 import nl.obren.sokrates.reports.utils.DataImageUtils;
+import nl.obren.sokrates.reports.utils.HtmlEscapeUtils;
 import nl.obren.sokrates.sourcecode.analysis.results.HistoryPerExtension;
 import nl.obren.sokrates.sourcecode.filehistory.DateUtils;
 import nl.obren.sokrates.sourcecode.landscape.MergeExtension;
@@ -145,7 +146,8 @@ public class HistoryPerLanguageGenerator {
 
     private void addComponentRow(String extension) {
         report.startTableRow();
-        report.addTableCell(extension, "text-align: right; color: grey; font-size: 80%; vertical-align: middle; border: none;");
+        // The row label is an extension or a logical component name (a folder name): repository-controlled.
+        report.addTableCell(HtmlEscapeUtils.escape(extension), "text-align: right; color: grey; font-size: 80%; vertical-align: middle; border: none;");
         for (int year = endYear(); year >= startYear(); year--) {
             addCell(extension, year);
         }
@@ -158,7 +160,7 @@ public class HistoryPerLanguageGenerator {
         for (int year = endYear(); year >= startYear(); year--) {
             addCell(extension, year);
         }
-        report.addTableCell(extension, "text-align: left; color: grey; font-size: 80%; vertical-align: middle; border: none;");
+        report.addTableCell(HtmlEscapeUtils.escape(extension), "text-align: left; color: grey; font-size: 80%; vertical-align: middle; border: none;");
         report.endTableRow();
     }
 

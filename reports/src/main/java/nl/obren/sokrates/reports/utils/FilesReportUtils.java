@@ -56,19 +56,22 @@ public class FilesReportUtils {
 
             String fileNameFragment;
 
+            // File and folder names are repository-controlled: escaped for element content, and the
+            // viewer link's path is percent-encoded for the URL fragment (see HtmlEscapeUtils).
+            String fileName = HtmlEscapeUtils.escape(file.getName());
             if (linkToFiles) {
-                String href = "../src/viewer.html#aspect=main&file=" + sourceFile.getRelativePath();
-                fileNameFragment = "<a target='blank' href='" + href + "'>" + file.getName() + "</a>";
+                String href = HtmlEscapeUtils.viewerFileHref("main", sourceFile.getRelativePath());
+                fileNameFragment = "<a target='blank' href='" + href + "'>" + fileName + "</a>";
             } else {
-                fileNameFragment = file.getName();
+                fileNameFragment = fileName;
             }
 
-            String parent = StringUtils.abbreviate(file.getParent(), 150);
+            String parent = file.getParent() == null ? "root" : HtmlEscapeUtils.escape(StringUtils.abbreviate(file.getParent(), 150));
             table.append("<td>" +
                     "<div style='white-space: nowrap; '><div style='display: inline-block; vertical-align: top; margin-top: 3px; margin-right: 4px;'>" +
                     DataImageUtils.getLangDataImageDiv30(ExtensionGroupExtractor.getExtension(file.getName())) +
                     "</div><div style='display: inline-block;'><b>"
-                    + fileNameFragment + "</b><div style='white-space: nowrap; overflow: hidden'>in " + (parent != null ? parent : "root") + "</div>" +
+                    + fileNameFragment + "</b><div style='white-space: nowrap; overflow: hidden'>in " + parent + "</div>" +
                     "</div></div>" +
                     "</td>\n");
             table.append("<td style='text-align: center'>" + sourceFile.getLinesOfCode() + "</td>\n");
@@ -98,8 +101,8 @@ public class FilesReportUtils {
                             table.append("<td style='text-align: center; color: lightgrey'>-</td>\n");
                         }
                     }
-                    table.append("<td style='text-align: center; font-size: 80%; color: grey'>" + StringUtils.abbreviate(history.getOldestContributor(), 30) + "</td>\n");
-                    table.append("<td style='text-align: center; font-size: 80%; color: grey'>" + StringUtils.abbreviate(history.getLatestContributor(), 30) + "</td>\n");
+                    table.append("<td style='text-align: center; font-size: 80%; color: grey'>" + HtmlEscapeUtils.escape(StringUtils.abbreviate(history.getOldestContributor(), 30)) + "</td>\n");
+                    table.append("<td style='text-align: center; font-size: 80%; color: grey'>" + HtmlEscapeUtils.escape(StringUtils.abbreviate(history.getLatestContributor(), 30)) + "</td>\n");
                 } else {
                     // Age columns in the header (created, last modified, # changes, # contributors,
                     // first contributor, latest contributor) plus the optional churn column: emit one

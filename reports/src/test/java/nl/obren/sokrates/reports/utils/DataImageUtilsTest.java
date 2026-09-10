@@ -22,6 +22,18 @@ class DataImageUtilsTest {
     }
 
     @Test
+    void langLabelIsEscapedInTitleAndText() {
+        // The label is a file extension, i.e. repository-controlled; the icon-less bubble repeats it as
+        // text. (The <img> branch is only reached for keys of the icon map, which hold no metacharacters,
+        // so only the bubble branch can be exercised with a payload.)
+        String div = DataImageUtils.getLangDataImageDiv30("x' onmouseover='XSS");
+        assertEquals(-1, div.indexOf("onmouseover='XSS"), div);
+        assertTrue(div.contains("title='x&#39; onmouseover=&#39;XSS'"), div);
+        assertTrue(div.endsWith("x&#39; onmouseover=&#39;XSS</div>"), div);
+        assertTrue(DataImageUtils.getLangDataImageDiv30("java").contains("title='java'"));
+    }
+
+    @Test
     void getLangDataImageReturnsNullForUnknownLang() {
         assertNull(DataImageUtils.getLangDataImage("definitelynotalanguage"));
     }

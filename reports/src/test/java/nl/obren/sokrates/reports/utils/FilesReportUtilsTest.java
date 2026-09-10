@@ -40,6 +40,34 @@ class FilesReportUtilsTest {
     }
 
     @Test
+    void escapesRepositoryControlledNamesAndEncodesViewerLink() {
+        SourceFile sourceFile = fileWithChurn("src/pwn\" onmouseover=\"XSSATTR/<img src=x onerror=XSSNAME>.ts", 1, 0);
+        sourceFile.getFileModificationHistory().getCommits().get(0).setEmail("x\"y@example.com");
+
+        String table = FilesReportUtils.getFilesTable(List.of(sourceFile), true, true, false, 500);
+
+        assertFalse(table.contains("<img src=x"), table);
+        assertFalse(table.contains("onmouseover=\"XSSATTR"), table);
+        assertFalse(table.contains("x\"y@"), table);
+        assertTrue(table.contains("href='../src/viewer.html#aspect=main&file=src/pwn%22%20onmouseover%3D%22XSSATTR/%3Cimg%20src%3Dx%20onerror%3DXSSNAME%3E.ts'>&lt;img src=x onerror=XSSNAME&gt;.ts</a>"), table);
+        assertTrue(table.contains(">in src/pwn&quot; onmouseover=&quot;XSSATTR</div>"), table);
+        assertTrue(table.contains(">x&quot;y@example.com</td>"), table);
+    }
+
+    @Test
+    void rootLevelFileSaysInRoot() {
+        String table = FilesReportUtils.getFilesTable(List.of(fileWithChurn("pom.xml", 1, 0)), true, false, false, 500);
+        assertTrue(table.contains(">in root</div>"), table);
+    }
+
+    @Test
+    void ordinaryNamesRenderUnchanged() {
+        String table = FilesReportUtils.getFilesTable(List.of(fileWithChurn("src/main/java/Foo.java", 1, 0)), true, false, false, 500);
+        assertTrue(table.contains("href='../src/viewer.html#aspect=main&file=src/main/java/Foo.java'>Foo.java</a>"), table);
+        assertTrue(table.contains(">in src/main/java</div>"), table);
+    }
+
+    @Test
     void churnPlaceholderWhenNoChurnData() {
         SourceFile sourceFile = new SourceFile(new File("src/B.java"));
         sourceFile.setRelativePath("src/B.java");

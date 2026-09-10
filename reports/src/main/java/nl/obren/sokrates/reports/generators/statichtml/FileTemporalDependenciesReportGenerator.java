@@ -8,6 +8,7 @@ import nl.obren.sokrates.common.utils.FormattingUtils;
 import nl.obren.sokrates.common.utils.ProcessingStopwatch;
 import nl.obren.sokrates.reports.core.RichTextReport;
 import nl.obren.sokrates.reports.utils.GraphvizDependencyRenderer;
+import nl.obren.sokrates.reports.utils.HtmlEscapeUtils;
 import nl.obren.sokrates.sourcecode.analysis.results.CodeAnalysisResults;
 import nl.obren.sokrates.sourcecode.analysis.results.FilesHistoryAnalysisResults;
 import nl.obren.sokrates.sourcecode.analysis.results.TemporalDependenciesWindow;
@@ -135,7 +136,7 @@ public class FileTemporalDependenciesReportGenerator {
         filePairs.forEach(filePair -> {
             report.startTableRow();
 
-            report.addTableCell(filePair.getSourceFile1().getRelativePath() + "<br/>" + filePair.getSourceFile2().getRelativePath());
+            report.addTableCell(HtmlEscapeUtils.escape(filePair.getSourceFile1().getRelativePath()) + "<br/>" + HtmlEscapeUtils.escape(filePair.getSourceFile2().getRelativePath()));
 
             int commitsCount = filePair.getCommits().size();
             report.addTableCell("" + commitsCount, "text-align: center");

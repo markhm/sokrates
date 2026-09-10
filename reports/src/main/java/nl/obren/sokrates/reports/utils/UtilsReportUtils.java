@@ -23,18 +23,23 @@ public class UtilsReportUtils {
             table.append("<tr>\n");
             index[0]++;
             String divId = "unitCode_" + index[0];
+            // Unit names come from source lines (generics like foo<T> are common) and paths are
+            // repository-controlled: both are escaped as element content; the viewer link's path is
+            // percent-encoded for the URL fragment (see HtmlEscapeUtils).
+            String relativePath = unit.getSourceFile().getRelativePath();
             String fileLink = cacheFiles
-                    ? "<a style='color: grey' target='_blank' href='../src/viewer.html#aspect=main&file="
-                    + unit.getSourceFile().getRelativePath() + "'>"
-                    + unit.getSourceFile().getRelativePath()
+                    ? "<a style='color: grey' target='_blank' href='"
+                    + HtmlEscapeUtils.viewerFileHref("main", relativePath) + "'>"
+                    + HtmlEscapeUtils.escape(relativePath)
                     + "</a>"
-                    : unit.getSourceFile().getRelativePath();
+                    : HtmlEscapeUtils.escape(relativePath);
+            String unitName = HtmlEscapeUtils.escape(unit.getShortName());
             String unitNameFragment = saveCodeFragments ? ("<a target='_blank' " +
                     "href='../src/viewer.html#bundle=fragments/" + fragmentType + ".json&i="
                     + index[0]
                     + "'>"
-                    + unit.getShortName() + "</a>")
-                    : (unit.getShortName());
+                    + unitName + "</a>")
+                    : unitName;
             table.append("<td style='white-space: nowrap; overflow: hidden'>" +
                     "<div><div style='display: inline-block; vertical-align: top; margin-top: 3px; margin-right: 4px;'>" +
                     DataImageUtils.getLangDataImageDiv30(ExtensionGroupExtractor.getExtension(unit.getSourceFile().getFile().getName())) +

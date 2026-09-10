@@ -86,6 +86,25 @@ class FileTemporalDependenciesReportGeneratorTest {
         assertTrue(htmlOf(report).contains("shorter than the shortest window"), htmlOf(report));
     }
 
+    @Test
+    void pairPathsAreEscaped(@TempDir File reportsFolder) {
+        CodeAnalysisResults results = resultsWithPairsInEveryWindow();
+        SourceFile file1 = new SourceFile(new File("src/<img src=x onerror=XSS>.ts"));
+        file1.setRelativePath("src/<img src=x onerror=XSS>.ts");
+        SourceFile file2 = new SourceFile(new File("b/two.java"));
+        file2.setRelativePath("b/two.java");
+        FilePairChangedTogether pair = new FilePairChangedTogether(file1, file2);
+        pair.setCommits(new ArrayList<>(Collections.singletonList("commit-1")));
+        results.getFilesHistoryAnalysisResults().setFilePairsChangedTogether30Days(new ArrayList<>(Collections.singletonList(pair)));
+
+        RichTextReport report = new RichTextReport("", "");
+        new FileTemporalDependenciesReportGenerator(results).addTemporalDependenciesToReport(reportsFolder, report);
+
+        String html = htmlOf(report);
+        assertTrue(html.contains("src/&lt;img src=x onerror=XSS&gt;.ts<br/>b/two.java"), html);
+        assertEquals(-1, html.indexOf("<img"), html);
+    }
+
     private RichTextReport renderWith(int maxTemporalDependenciesDepthDays, File reportsFolder) {
         CodeAnalysisResults results = resultsWithPairsInEveryWindow();
         results.getCodeConfiguration().getAnalysis().setMaxTemporalDependenciesDepthDays(maxTemporalDependenciesDepthDays);

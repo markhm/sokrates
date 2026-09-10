@@ -1,6 +1,8 @@
 package nl.obren.sokrates.reports.generators.statichtml;
 
+import nl.obren.sokrates.reports.core.ReportRenderer;
 import nl.obren.sokrates.reports.core.RichTextReport;
+import nl.obren.sokrates.reports.utils.HtmlEscapeUtils;
 
 public class VisualizationTools {
     public static void addDownloadLinks(RichTextReport report, String graphId) {
@@ -17,12 +19,12 @@ public class VisualizationTools {
     // graph pages that were previously written as .svg files (and opened via a "new tab" link).
     public static String standaloneMermaidPage(String title, String mermaidDefinition) {
         return "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n"
-                + "<title>" + title + "</title>\n"
+                + "<title>" + HtmlEscapeUtils.escape(title) + "</title>\n"
                 + "<script type=\"module\">\n"
                 + "import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';\n"
-                + "mermaid.initialize({ startOnLoad: true, securityLevel: 'loose', maxEdges: 1000, flowchart: { useMaxWidth: true } });\n"
+                + "mermaid.initialize({ startOnLoad: true, securityLevel: 'strict', maxEdges: 1000, flowchart: { useMaxWidth: true } });\n"
                 + "</script>\n</head>\n<body>\n"
-                + "<pre class=\"mermaid\">\n" + mermaidDefinition + "\n</pre>\n"
+                + "<pre class=\"mermaid\">\n" + ReportRenderer.escapeMermaidText(mermaidDefinition) + "\n</pre>\n"
                 + "</body>\n</html>\n";
     }
 }

@@ -8,7 +8,6 @@ import nl.obren.sokrates.common.utils.FormattingUtils;
 import nl.obren.sokrates.reports.charts.SimpleOneBarChart;
 import nl.obren.sokrates.reports.core.RichTextReport;
 import nl.obren.sokrates.sourcecode.metrics.DuplicationMetric;
-import org.apache.commons.text.StringEscapeUtils;
 
 import java.util.List;
 
@@ -30,7 +29,7 @@ public class DuplicationReportUtils {
             chart.setMaxBarWidth((int) (200.0 * metric.getCleanedLinesOfCode() / maxCleanedLinesOfCode[0]));
             // Use the guarded accessor so a metric with 0 cleaned lines yields 0%, not NaN.
             double percentage = metric.getDuplicationPercentage().doubleValue();
-            String textRight = StringEscapeUtils.escapeHtml4(
+            String textRight = HtmlEscapeUtils.escape(
                     FormattingUtils.getFormattedPercentage(percentage)
                             + "% (" + FormattingUtils.formatCount(metric.getDuplicatedLinesOfCode()) + " lines)");
             String svg = chart.getPercentageSvg(percentage, metric.getKey(), textRight);
@@ -50,7 +49,7 @@ public class DuplicationReportUtils {
         chart.setMaxBarWidth(200);
         // Use the guarded accessor so 0 cleaned lines yields 0%, not NaN.
         double percentage = metric.getDuplicationPercentage().doubleValue();
-        String textRight = StringEscapeUtils.escapeHtml4(
+        String textRight = HtmlEscapeUtils.escape(
                 FormattingUtils.getFormattedPercentage(percentage)
                         + "% (" + FormattingUtils.formatCount(metric.getDuplicatedLinesOfCode()) + " lines)");
         String svg = chart.getPercentageSvg(percentage, metric.getKey(), textRight);

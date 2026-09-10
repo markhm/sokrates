@@ -7,13 +7,13 @@ package nl.obren.sokrates.reports.generators.statichtml;
 import nl.obren.sokrates.common.renderingutils.charts.Palette;
 import nl.obren.sokrates.common.utils.FormattingUtils;
 import nl.obren.sokrates.reports.core.RichTextReport;
+import nl.obren.sokrates.reports.utils.HtmlEscapeUtils;
 import nl.obren.sokrates.reports.utils.HtmlTemplateUtils;
 import nl.obren.sokrates.sourcecode.analysis.results.CodeAnalysisResults;
 import nl.obren.sokrates.sourcecode.analysis.results.ContributorsAnalysisResults;
 import nl.obren.sokrates.sourcecode.contributors.ContributionTimeSlot;
 import nl.obren.sokrates.sourcecode.contributors.Contributor;
 import nl.obren.sokrates.sourcecode.stats.RiskDistributionStats;
-import org.apache.commons.text.StringEscapeUtils;
 
 import java.util.Collections;
 import java.util.List;
@@ -672,7 +672,7 @@ public class ContributorsReportUtils {
         if (contributor.getLinesAdded() > 0 || contributor.getLinesDeleted() > 0) {
             churnInfo = ", +" + contributor.getLinesAdded() + "/-" + contributor.getLinesDeleted() + " lines";
         }
-        String info = StringEscapeUtils.escapeHtml4(contributor.getEmail()
+        String info = HtmlEscapeUtils.escape(contributor.getEmail()
                 + " " + commitsCount
                 + " commits (" + FormattingUtils.getFormattedPercentage(percentage) + "%)" + churnInfo + ","
                 + " between " + contributor.getFirstCommitDate() + " and " + contributor.getLatestCommitDate());
@@ -685,7 +685,7 @@ public class ContributorsReportUtils {
         String icon = contributor.isBot() ? "bot" : "contributor";
         indexReport.addHtmlContent(getIconSvg(icon, 64));
         indexReport.addHtmlContent("<div style='padding: 4px; font-size: 10px; width: 64px; overflow: hidden; max-height: 22px; min-height: 22px;'>");
-        indexReport.addHtmlContent(contributor.getEmail());
+        indexReport.addHtmlContent(HtmlEscapeUtils.escape(contributor.getEmail()));
         indexReport.addHtmlContent("</div>");
         indexReport.addHtmlContent("</div>");
     }

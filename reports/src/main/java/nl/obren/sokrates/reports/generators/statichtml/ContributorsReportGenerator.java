@@ -12,6 +12,7 @@ import nl.obren.sokrates.common.renderingutils.force3d.Force3DObject;
 import nl.obren.sokrates.common.utils.FormattingUtils;
 import nl.obren.sokrates.reports.core.RichTextReport;
 import nl.obren.sokrates.reports.utils.GraphvizDependencyRenderer;
+import nl.obren.sokrates.reports.utils.HtmlEscapeUtils;
 import nl.obren.sokrates.sourcecode.analysis.results.CodeAnalysisResults;
 import nl.obren.sokrates.sourcecode.analysis.results.ContributorsAnalysisResults;
 import nl.obren.sokrates.sourcecode.contributors.Contributor;
@@ -343,9 +344,9 @@ public class ContributorsReportGenerator {
             String textOpacity = contributor.getCommitsCount90Days() > 0 ? "font-weight: bold;" : "opacity: 0.4";
             report.startTableCell("border: none; " + textOpacity);
             if (StringUtils.isNotBlank(contributor.getEmail()) && StringUtils.isNotBlank(contributor.getUserName())) {
-                report.addHtmlContent(contributor.getUserName() + " <div style='color: grey; font-size: 80%; margin-bottom: 6px;'>&lt;" + contributor.getEmail() + "&gt;</div>");
+                report.addHtmlContent(HtmlEscapeUtils.escape(contributor.getUserName()) + " <div style='color: grey; font-size: 80%; margin-bottom: 6px;'>&lt;" + HtmlEscapeUtils.escape(contributor.getEmail()) + "&gt;</div>");
             } else {
-                report.addHtmlContent((contributor.getUserName() + contributor.getEmail()).trim());
+                report.addHtmlContent(HtmlEscapeUtils.escape((contributor.getUserName() + contributor.getEmail()).trim()));
             }
             report.endTableCell();
             // Each commits-count window shows the count with that window's line churn underneath in
@@ -469,9 +470,9 @@ public class ContributorsReportGenerator {
             report.startTableRow();
             report.addTableCell(index[0] + ".");
             if (StringUtils.isNotBlank(contributorConnection.getEmail()) && StringUtils.isNotBlank(contributorConnection.getUserName())) {
-                report.addTableCell(contributorConnection.getUserName() + " <div style='color: grey; font-size: 80%; margin-bottom: 6px;'>&lt;" + contributorConnection.getEmail() + "&gt;</div>");
+                report.addTableCell(HtmlEscapeUtils.escape(contributorConnection.getUserName()) + " <div style='color: grey; font-size: 80%; margin-bottom: 6px;'>&lt;" + HtmlEscapeUtils.escape(contributorConnection.getEmail()) + "&gt;</div>");
             } else {
-                report.addTableCell((contributorConnection.getUserName() + contributorConnection.getEmail()).trim());
+                report.addTableCell(HtmlEscapeUtils.escape((contributorConnection.getUserName() + contributorConnection.getEmail()).trim()));
             }
             report.addTableCell(contributorConnection.getCount() + "");
             report.addTableCell(contributorConnection.getCommits() + "");
@@ -501,15 +502,15 @@ public class ContributorsReportGenerator {
             String to = dependency.getToComponent() + "";
 
             if (emailContributorMap.containsKey(from) && StringUtils.isNotBlank(emailContributorMap.get(from).getUserName())) {
-                report.addTableCell(emailContributorMap.get(from).getUserName() + " <div style='color: grey; font-size: 80%; margin-bottom: 6px;'>&lt;" + from + "&gt;</div>");
+                report.addTableCell(HtmlEscapeUtils.escape(emailContributorMap.get(from).getUserName()) + " <div style='color: grey; font-size: 80%; margin-bottom: 6px;'>&lt;" + HtmlEscapeUtils.escape(from) + "&gt;</div>");
             } else {
-                report.addTableCell(from);
+                report.addTableCell(HtmlEscapeUtils.escape(from));
             }
 
             if (emailContributorMap.containsKey(to) && StringUtils.isNotBlank(emailContributorMap.get(to).getUserName())) {
-                report.addTableCell(emailContributorMap.get(to).getUserName() + " <div style='color: grey; font-size: 80%; margin-bottom: 6px;'>&lt;" + to + "&gt;</div>");
+                report.addTableCell(HtmlEscapeUtils.escape(emailContributorMap.get(to).getUserName()) + " <div style='color: grey; font-size: 80%; margin-bottom: 6px;'>&lt;" + HtmlEscapeUtils.escape(to) + "&gt;</div>");
             } else {
-                report.addTableCell(to);
+                report.addTableCell(HtmlEscapeUtils.escape(to));
             }
 
 
@@ -530,7 +531,7 @@ public class ContributorsReportGenerator {
         if (tooLong) {
             data = data.subList(0, 100);
         }
-        data.forEach(path -> report.addHtmlContent("<br>" + path));
+        data.forEach(path -> report.addHtmlContent("<br>" + HtmlEscapeUtils.escape(path)));
         if (tooLong) {
             report.addHtmlContent("<br>...");
         }
@@ -646,7 +647,7 @@ public class ContributorsReportGenerator {
                             + FormattingUtils.getFormattedPercentage(100.0 * cumulative[0] / total[0])
                             + "% of all commits";
                 }
-                map.append("<div style='background-color: " + palette.nextColor() + "; display: inline-block; height: 20px; width: " + w + "px' title='" + contributor.getEmail() + "\n" + contributorCommitsCount + " commits (" + (Math.round(100.0 * contributorCommitsCount / total[0])) + "%)" + cumulativeText + "'>&nbsp;</div>");
+                map.append("<div style='background-color: " + palette.nextColor() + "; display: inline-block; height: 20px; width: " + w + "px' title='" + HtmlEscapeUtils.escape(contributor.getEmail()) + "\n" + contributorCommitsCount + " commits (" + (Math.round(100.0 * contributorCommitsCount / total[0])) + "%)" + cumulativeText + "'>&nbsp;</div>");
             });
             report.addHtmlContent(map.toString());
             report.addLineBreak();
@@ -671,9 +672,9 @@ public class ContributorsReportGenerator {
             report.startTableRow(style);
             report.addTableCell(index[0] + ".");
             if (StringUtils.isNotBlank(contributor.getEmail()) && StringUtils.isNotBlank(contributor.getUserName())) {
-                report.addTableCell(contributor.getUserName() + " <div style='color: grey; font-size: 80%; margin-bottom: 6px;'>&lt;" + contributor.getEmail() + "&gt;</div>");
+                report.addTableCell(HtmlEscapeUtils.escape(contributor.getUserName()) + " <div style='color: grey; font-size: 80%; margin-bottom: 6px;'>&lt;" + HtmlEscapeUtils.escape(contributor.getEmail()) + "&gt;</div>");
             } else {
-                report.addTableCell((contributor.getUserName() + contributor.getEmail()).trim());
+                report.addTableCell(HtmlEscapeUtils.escape((contributor.getUserName() + contributor.getEmail()).trim()));
             }
 
             report.addTableCell(contributor.getFirstCommitDate());

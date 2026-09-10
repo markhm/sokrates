@@ -230,7 +230,7 @@
         .attr('x', d => x(d.value) - 8)
         .attr('y', d => y(d.rank) + 5 + ((y(1) - y(0)) / 2) + 1)
         .style('text-anchor', 'end')
-        .html(d => d.name);
+        .text(d => d.name); // component names are repository-controlled: text, never innerHTML
 
     svg.selectAll('text.valueLabel')
         .data(yearSlice, d => d.name)
@@ -309,7 +309,7 @@
             .attr('x', d => Math.max(0, x(d.value) - 8))
             .attr('y', d => y(top_n + 1) + 5 + ((y(1) - y(0)) / 2))
             .style('text-anchor', 'end')
-            .html(d => d.name)
+            .text(d => d.name)
             .transition()
             .duration(tickDuration)
             .ease(d3.easeLinear)

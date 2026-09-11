@@ -7,6 +7,7 @@ import nl.obren.sokrates.reports.landscape.data.LandscapeDataExport;
 import nl.obren.sokrates.reports.landscape.statichtml.LandscapeReportGenerator;
 import nl.obren.sokrates.reports.landscape.utils.Force3DGraphExporter;
 import nl.obren.sokrates.reports.landscape.utils.TagStats;
+import nl.obren.sokrates.reports.utils.HtmlEscapeUtils;
 import nl.obren.sokrates.reports.utils.DataImageUtils;
 import nl.obren.sokrates.reports.utils.GraphvizDependencyRenderer;
 import nl.obren.sokrates.sourcecode.analysis.results.CodeAnalysisResults;
@@ -87,7 +88,7 @@ public class LandscapeRepositoriesTagsReport {
                 return;
             }
             index[0] += 1;
-            String item = "<a href='#" + TAG_GROUP_ANCHOR_PREFIX + index[0] + "'><b>" + tagGroup.getName() + "</b></a> (" + count[0] + ")";
+            String item = "<a href='#" + TAG_GROUP_ANCHOR_PREFIX + index[0] + "'><b>" + HtmlEscapeUtils.escape(tagGroup.getName()) + "</b></a> (" + count[0] + ")";
             if (StringUtils.isNotBlank(tagGroup.getDescription())) {
                 item += "<span style='color: grey;'>: " + tagGroup.getDescription() + "</span>";
             }
@@ -109,7 +110,7 @@ public class LandscapeRepositoriesTagsReport {
             report.startMultiColumnTableCell(8, "");
             report.addAnchor(TAG_GROUP_ANCHOR_PREFIX + index[0]);
             report.startDiv("border-radius: 9px; padding: 6px; margin-top: 16px; border: 1px solid lightgrey; background-color: " + tagGroup.getColor());
-            report.addHtmlContent(tagGroup.getName() + " (" + count[0] + ")");
+            report.addText(tagGroup.getName() + " (" + count[0] + ")");
             if (StringUtils.isNotBlank(tagGroup.getDescription())) {
                 report.addHtmlContent("<span style='color: grey;'>: " + tagGroup.getDescription() + "</span>");
             }
@@ -357,7 +358,7 @@ public class LandscapeRepositoriesTagsReport {
                 CodeAnalysisResults repositoryAnalysisResults = repository.getAnalysisResults();
                 String repositoryReportUrl = getRepositoryReportUrl(repository);
                 report.addContentInDiv(
-                        "<a href='" + repositoryReportUrl + "' target='_blank' style='margin-left: 6px'>" + repositoryAnalysisResults.getMetadata().getName() + "</a> "
+                        "<a href='" + repositoryReportUrl + "' target='_blank' style='margin-left: 6px'>" + HtmlEscapeUtils.escape(repositoryAnalysisResults.getMetadata().getName()) + "</a> "
                                 + "<span color='lightgrey'>(<b>"
                                 + FormattingUtils.formatCount(repositoryAnalysisResults.getMainAspectAnalysisResults().getLinesOfCode(), "-") + "</b> LOC)</span>");
             });
@@ -453,7 +454,7 @@ public class LandscapeRepositoriesTagsReport {
 
     private String tooltip(RepositoryAnalysisResults repository) {
         CodeAnalysisResults analysis = repository.getAnalysisResults();
-        return analysis.getMetadata().getName() + "\n\n" +
+        return HtmlEscapeUtils.escape(analysis.getMetadata().getName()) + "\n\n" +
                 analysis.getContributorsAnalysisResults().getCommitsCount30Days() + " commits (30 days)" + "\n" +
                 analysis.getContributorsAnalysisResults().getContributors()
                         .stream().filter(contributor -> contributor.getCommitsCount30Days() > 0).count() + " contributors (30 days)" + "\n" +

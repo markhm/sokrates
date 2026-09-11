@@ -685,7 +685,7 @@ public class ContributorsReportUtils {
         String icon = contributor.isBot() ? "bot" : "contributor";
         indexReport.addHtmlContent(getIconSvg(icon, 64));
         indexReport.addHtmlContent("<div style='padding: 4px; font-size: 10px; width: 64px; overflow: hidden; max-height: 22px; min-height: 22px;'>");
-        indexReport.addHtmlContent(HtmlEscapeUtils.escape(contributor.getEmail()));
+        indexReport.addText(contributor.getEmail());
         indexReport.addHtmlContent("</div>");
         indexReport.addHtmlContent("</div>");
     }

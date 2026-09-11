@@ -8,6 +8,7 @@ import nl.obren.sokrates.common.io.JsonGenerator;
 import nl.obren.sokrates.common.renderingutils.ExplorerTemplate;
 import nl.obren.sokrates.common.utils.FormattingUtils;
 import nl.obren.sokrates.common.utils.ProcessingStopwatch;
+import nl.obren.sokrates.reports.utils.HtmlEscapeUtils;
 import nl.obren.sokrates.reports.core.ReportConstants;
 import nl.obren.sokrates.reports.core.RichTextReport;
 import nl.obren.sokrates.reports.generators.statichtml.HistoryPerLanguageGenerator;
@@ -462,8 +463,8 @@ public class LandscapeReportContributorsTab {
         String smallTextForNumber = FormattingUtils.getSmallTextForNumber(size) + suffix;
         addLangInfoBlockExtra(smallTextForNumber, extension.getExtension().replace("*.", "").trim(),
                 size + " " + (size == 1 ? "contributor" : "contributors (" + commitsCount + " commits)") + ":\n" +
-                        extractor.getValue(extension).stream().limit(100)
-                                .collect(Collectors.joining(", ")), FormattingUtils.getSmallTextForNumber(commitsCount) + " commits");
+                        HtmlEscapeUtils.escape(extractor.getValue(extension).stream().limit(100)
+                                .collect(Collectors.joining(", "))), FormattingUtils.getSmallTextForNumber(commitsCount) + " commits");
     }
 
     private void addContributors() {
@@ -656,7 +657,7 @@ public class LandscapeReportContributorsTab {
             // correct pattern used for the distribution percentages below.
             double cumulativePercentage = Math.round(1000.0 * cumulativeCount[0] / sum) / 10.0;
             double contributorPercentage = Math.round(10000.0 * index[0] / recentContributorsCount) / 100.0;
-            String tooltip = contributor.getEmail()
+            String tooltip = HtmlEscapeUtils.escape(contributor.getEmail())
                     + "\n - commits (30d): " + count
                     + "\n - cumulative commits (top " + index[0] + "): " + cumulativeCount[0]
                     + "\n - cumulative percentage (top " + contributorPercentage + "% " + "): " + cumulativePercentage + "%";
@@ -1112,7 +1113,7 @@ public class LandscapeReportContributorsTab {
             int height = 2 + (int) (64.0 * count / maxContributors);
             int heightRookies = 1 + (int) (64.0 * rookiesCount / maxContributors);
             String title = "period " + week.getTimeSlot() + " = " + count + " extractedContributors (" + rookiesCount + " rookies):\n\n" +
-                    extractedContributors.subList(0, extractedContributors.size() < 200 ? extractedContributors.size() : 200).stream().collect(Collectors.joining(", "));
+                    HtmlEscapeUtils.escape(extractedContributors.subList(0, extractedContributors.size() < 200 ? extractedContributors.size() : 200).stream().collect(Collectors.joining(", ")));
             String yearString = week.getTimeSlot().split("[-]")[0];
 
             String color = "darkgrey";
@@ -1144,7 +1145,7 @@ public class LandscapeReportContributorsTab {
             int count = extractedContributors.size();
             int height = 4 + (int) (64.0 * count / maxContributors);
             String title = "timeUnit of " + timeUnit.getTimeSlot() + " = " + count + " extractedContributors:\n\n" +
-                    extractedContributors.subList(0, extractedContributors.size() < 200 ? extractedContributors.size() : 200).stream().collect(Collectors.joining(", "));
+                    HtmlEscapeUtils.escape(extractedContributors.subList(0, extractedContributors.size() < 200 ? extractedContributors.size() : 200).stream().collect(Collectors.joining(", ")));
             String yearString = timeUnit.getTimeSlot().split("[-]")[0];
 
             String color = "lightgrey";

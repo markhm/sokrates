@@ -64,7 +64,7 @@ public class ConcernsReportGenerator {
                                 concern.getFilesCount(), concernLoc, 400, 20, fileListPath, isDerivedConcern(concern.getName()));
                         report.startDiv("");
                         // Meta-concern names are extracted from source lines, so they are repository-controlled.
-                        report.addContentInDiv(HtmlEscapeUtils.escape(concern.getName()));
+                        report.addContentInDivText(concern.getName());
                         report.addHtmlContent(svg);
                         report.endDiv();
                     }
@@ -117,7 +117,7 @@ public class ConcernsReportGenerator {
                 + count + "</b> concern" + (count > 1 ? "s" : "") + ".");
 
         report.startUnorderedList();
-        concernsAnalysisResults.getConcerns().forEach(c -> report.addListItem(HtmlEscapeUtils.escape(c.getName())));
+        concernsAnalysisResults.getConcerns().forEach(c -> report.addListItemText(c.getName()));
         report.endUnorderedList();
 
         report.endUnorderedList();

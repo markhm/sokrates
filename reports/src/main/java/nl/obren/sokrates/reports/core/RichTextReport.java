@@ -6,6 +6,7 @@ package nl.obren.sokrates.reports.core;
 
 import nl.obren.sokrates.common.analysis.Finding;
 import nl.obren.sokrates.common.renderingutils.RichTextRenderingUtils;
+import nl.obren.sokrates.reports.utils.HtmlEscapeUtils;
 import nl.obren.sokrates.sourcecode.Link;
 import org.apache.commons.lang3.StringUtils;
 
@@ -13,6 +14,15 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Builder for a server-rendered HTML report. String arguments are HTML by contract: they are
+ * concatenated into the page as they are. Repository-controlled strings (file, folder, unit and
+ * component names, git author names and emails) go through the text primitives ({@code addText},
+ * {@code addParagraphText}, {@code addListItemText}, {@code addTableCellText}, {@code addContentInDivText},
+ * {@code addTabText}, {@code startSubSectionText}), which escape them; the plain methods are for markup
+ * built on purpose. {@code RichTextReportSinkEscapingTest} enforces the classification for the report
+ * generators.
+ */
 public class RichTextReport {
     private List<RichTextFragment> richTextFragments = new ArrayList<>();
     private String id;
@@ -138,14 +148,6 @@ public class RichTextReport {
 
     public void addQuoteParagraph(String quote, String source) {
         addHtmlContent("<p><i>\"" + quote + "\"</i> (" + source + ")</p>");
-    }
-
-    public void addEmphasisedText(String text) {
-        addHtmlContent("<i>" + text + "</i>");
-    }
-
-    public void addStrongText(String text) {
-        addHtmlContent("<b>" + text + "</b>");
     }
 
     public void addSvgFigure(String title, String svg) {
@@ -525,6 +527,44 @@ public class RichTextReport {
 
     public void setRenderLogo(boolean renderLogo) {
         this.renderLogo = renderLogo;
+    }
+
+    // --- text-taking primitives: the argument is text, escaped here; use these for repository-controlled strings ---
+
+    public void addText(String text) {
+        addHtmlContent(HtmlEscapeUtils.escape(text));
+    }
+
+    public void addParagraphText(String text) {
+        addParagraph(HtmlEscapeUtils.escape(text));
+    }
+
+    public void addListItemText(String text) {
+        addListItem(HtmlEscapeUtils.escape(text));
+    }
+
+    public void addTableCellText(String text) {
+        addTableCell(HtmlEscapeUtils.escape(text));
+    }
+
+    public void addTableCellText(String text, String style) {
+        addTableCell(HtmlEscapeUtils.escape(text), style);
+    }
+
+    public void addContentInDivText(String text) {
+        addContentInDiv(HtmlEscapeUtils.escape(text));
+    }
+
+    public void addContentInDivText(String text, String style) {
+        addContentInDiv(HtmlEscapeUtils.escape(text), style);
+    }
+
+    public void addTabText(String id, String label, boolean active) {
+        addTab(id, HtmlEscapeUtils.escape(label), active);
+    }
+
+    public void startSubSectionText(String title, String subtitle) {
+        startSubSection(HtmlEscapeUtils.escape(title), HtmlEscapeUtils.escape(subtitle));
     }
 
     public void addContentInSpan(String content, String style) {

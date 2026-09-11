@@ -4,6 +4,7 @@ import nl.obren.sokrates.common.utils.FormattingUtils;
 import nl.obren.sokrates.common.utils.ProcessingStopwatch;
 import nl.obren.sokrates.reports.core.RichTextReport;
 import nl.obren.sokrates.reports.landscape.utils.TagStats;
+import nl.obren.sokrates.reports.utils.HtmlEscapeUtils;
 import nl.obren.sokrates.reports.utils.DataImageUtils;
 import nl.obren.sokrates.sourcecode.analysis.results.CodeAnalysisResults;
 import nl.obren.sokrates.sourcecode.landscape.RepositoryTag;
@@ -60,7 +61,7 @@ public class LandscapeRepositoriesTagsMatrixReport {
             index[0] += 1;
 
             report.startDiv("border-radius: 9px; padding: 6px; margin-top: 16px; border: 1px solid lightgrey; background-color: " + tagGroup.getColor());
-            report.addHtmlContent(tagGroup.getName() + " (" + count[0] + ")");
+            report.addText(tagGroup.getName() + " (" + count[0] + ")");
             if (StringUtils.isNotBlank(tagGroup.getDescription())) {
                 report.addHtmlContent("<span style='color: grey;'>: " + tagGroup.getDescription() + "</span>");
             }
@@ -160,7 +161,7 @@ public class LandscapeRepositoriesTagsMatrixReport {
                 CodeAnalysisResults repositoryAnalysisResults = repository.getAnalysisResults();
                 String repositoryReportUrl = getrepositoryReportUrl(repository);
                 report.addContentInDiv(
-                        "<div style='white-space: nowrap; overflow: hidden'><a href='" + repositoryReportUrl + "' target='_blank' style='margin-left: 6px'>" + repositoryAnalysisResults.getMetadata().getName() + "</a> "
+                        "<div style='white-space: nowrap; overflow: hidden'><a href='" + repositoryReportUrl + "' target='_blank' style='margin-left: 6px'>" + HtmlEscapeUtils.escape(repositoryAnalysisResults.getMetadata().getName()) + "</a> "
                                 + "<span color='lightgrey'>(<b>"
                                 + FormattingUtils.formatCount(repositoryAnalysisResults.getMainAspectAnalysisResults().getLinesOfCode(), "-") + "</b> LOC)</span></div>");
             });

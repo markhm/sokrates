@@ -1487,7 +1487,7 @@ public class LandscapeReportGenerator {
         addLangInfoBlock(smallTextForNumber, extension.getName().replace("*.", "").trim(),
                 size + " " + (size == 1 ? "repository" : "repositories") + ":\n  " +
                         extension.getDescription().stream()
-                                .map(a -> a.getName() + " (" + FormattingUtils.formatCount(a.getValue().intValue()) + " LOC)")
+                                .map(a -> HtmlEscapeUtils.escape(a.getName()) + " (" + FormattingUtils.formatCount(a.getValue().intValue()) + " LOC)")
                                 .collect(Collectors.joining("\n  ")), scope);
     }
 
@@ -1734,7 +1734,7 @@ public class LandscapeReportGenerator {
             String info = "";
             if (count > 0) {
                 info += animalCounts.get(animal).stream()
-                        .map(a -> a.getAnalysisResults().getMetadata().getName() + " " + a.getAnalysisResults().getMainAspectAnalysisResults().getLinesOfCode())
+                        .map(a -> HtmlEscapeUtils.escape(a.getAnalysisResults().getMetadata().getName()) + " " + a.getAnalysisResults().getMainAspectAnalysisResults().getLinesOfCode())
                         .collect(Collectors.joining("\n"));
             }
 

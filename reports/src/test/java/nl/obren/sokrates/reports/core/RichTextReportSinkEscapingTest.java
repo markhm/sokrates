@@ -38,8 +38,9 @@ import static org.junit.jupiter.api.Assertions.*;
  * (balanced) argument text scanned; a call to, or a method reference ({@code ::getName}) of, one of
  * {@link #REPOSITORY_CONTROLLED_GETTERS} inside that text is a violation unless it sits inside an
  * argument of one of the {@link #SAFE_WRAPPERS} escapers, in one of the argument positions that wrapper
- * escapes (positions are counted by top-level commas, so an array initialiser in an earlier argument
- * shifts the count — towards reporting, never towards accepting). Comments and string literals are blanked
+ * escapes (positions are counted by top-level commas; a comma inside an array initialiser or a generic
+ * type argument shifts the count, so a positional wrapper can be misjudged either way in such contrived
+ * arguments). Comments and string literals are blanked
  * first, so a getter name inside a literal does not count and a parenthesis inside a literal does not
  * unbalance the scan.
  *
@@ -49,8 +50,8 @@ import static org.junit.jupiter.api.Assertions.*;
  * or an untyped lambda parameter ({@code reports.forEach(r -> r.addTableCell(..))}); the {@code cli} and
  * {@code codeanalyzer} modules (no report calls there); and the client-rendered templates, which escape
  * in JavaScript. {@code cli}'s {@code ReportHtmlEscapingTest} is the end-to-end check that covers the
- * paths this scan cannot see. Safe wrappers are matched on the qualified callee as written on one line: a
- * static import ({@code escape(x)}) or a callee split over a line break is not recognised and is reported,
+ * paths this scan cannot see. Safe wrappers are matched on the qualified callee as written: a static
+ * import ({@code escape(x)}) or a line break before {@code .escape} is not recognised and is reported,
  * which is the safe direction.
  *
  * <p>To fix a finding, use the {@code ...Text} primitive (or {@code HtmlEscapeUtils.escape} when the
@@ -173,15 +174,16 @@ class RichTextReportSinkEscapingTest {
                 "  report.addContentInDiv(chart.getPercentageSvg(1, f.getName(), \"x\"));",     // 11 getter in the escaped textLeft: fine
                 "  report.addContentInDiv(chart.getPercentageSvg(1, \"x\", f.getName()));",     // 12 getter in the HTML-by-contract textRight: violation
                 "  report.addTableCell(escape(f.getName()));",                                 // 13 unqualified escaper is not recognised: violation (safe direction)
-                "  report.addTableCell(files.stream().map(SourceFile::getRelativePath).collect(Collectors.joining(\", \")));", // 14 method reference: violation
+                "  report.addTableCell(files.stream().map(SourceFile :: getRelativePath).collect(Collectors.joining(\", \")));", // 14 method reference (spaces allowed): violation
                 "  report.addTableCell(HtmlEscapeUtils.escape(files.stream().map(SourceFile::getName).collect(Collectors.joining())));", // 15 escaped: fine
                 "  report.addTableCell(\"<a href='\" + HtmlEscapeUtils.viewerFileHref(f.getName(), \"p\") + \"'>\");", // 16 getter in the aspect, which viewerFileHref does not encode: violation
+                "  report.addTableCell(names.stream().map(this::getName).collect(Collectors.joining()));", // 17 the generator's own method: fine
                 "} }"};
         Scan scan = new Scan();
         scan.file("G.java", String.join("\n", lines));
         List<Integer> flaggedLines = scan.violations.stream().map(v -> Integer.parseInt(v.substring("G.java:".length(), v.indexOf(' ')))).collect(Collectors.toList());
         assertEquals(Arrays.asList(2, 7, 8, 10, 12, 13, 14, 16), flaggedLines, scan.violations.toString());
-        assertEquals(13, scan.sinkCalls, "the text-primitive and structural calls are not sink calls");
+        assertEquals(14, scan.sinkCalls, "the text-primitive and structural calls are not sink calls");
     }
 
     /** A source scan: receivers by declaration, sink calls by balanced parentheses, getters by enclosing-call stack. */
@@ -240,8 +242,9 @@ class RichTextReportSinkEscapingTest {
                     stack.add(new Frame(name));
                 } else if (c == ':' && i + 1 < close && code.charAt(i + 1) == ':') {
                     // a method reference such as SourceFile::getName inside a stream pipeline
-                    Matcher ref = Pattern.compile("^::(\\w+)").matcher(code.substring(i, Math.min(close, i + 40)));
-                    if (ref.find() && REPOSITORY_CONTROLLED_GETTERS.contains(ref.group(1))) {
+                    Matcher ref = Pattern.compile("^::\\s*(\\w+)").matcher(code.substring(i, Math.min(close, i + 60)));
+                    boolean onThis = code.substring(Math.max(open, i - 8), i).trim().endsWith("this");
+                    if (ref.find() && REPOSITORY_CONTROLLED_GETTERS.contains(ref.group(1)) && !onThis) {
                         checkGetter(file, code, i, sink, "::" + ref.group(1), stack);
                     }
                     i++;

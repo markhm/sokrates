@@ -78,7 +78,7 @@ public class LogicalComponentsReportGenerator {
         report.startUnorderedList();
         logicalDecompositionsAnalysisResults.forEach(logicalDecomposition -> {
             int componentsCount = logicalDecomposition.getComponents().size();
-            report.addListItem(logicalDecomposition.getLogicalDecomposition().getName() + " (" + componentsCount + " component" + (componentsCount > 1 ? "s" : "") + ")");
+            report.addListItemText(logicalDecomposition.getLogicalDecomposition().getName() + " (" + componentsCount + " component" + (componentsCount > 1 ? "s" : "") + ")");
         });
         report.endUnorderedList();
         report.endSection();
@@ -87,7 +87,7 @@ public class LogicalComponentsReportGenerator {
         boolean active[] = {true};
         logicalDecompositionsAnalysisResults.forEach(logicalDecomposition -> {
             LogicalDecomposition decomposition = logicalDecomposition.getLogicalDecomposition();
-            report.addTab(decomposition.getName(), decomposition.getName(), active[0]);
+            report.addTabText(decomposition.getName(), decomposition.getName(), active[0]);
             active[0] = false;
         });
         report.endTabGroup();

@@ -192,7 +192,7 @@ public class FileSizeReportGenerator {
     private void addGraphsPerLogicalComponents(RichTextReport report, List<FileDistributionPerLogicalDecomposition> fileDistributionPerLogicalDecompositions) {
         report.startSection("File Size per Logical Decomposition", "");
         fileDistributionPerLogicalDecompositions.forEach(logicalDecomposition -> {
-            report.startSubSection("" + logicalDecomposition.getName() + "", "");
+            report.startSubSectionText(logicalDecomposition.getName(), "");
             report.startScrollingDiv();
             report.addHtmlContent(RiskDistributionStatsReportUtils.getRiskDistributionPerKeySvgBarChart(logicalDecomposition.getFileSizeDistributionPerComponent(), labels));
             report.endDiv();

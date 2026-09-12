@@ -6,6 +6,7 @@ package nl.obren.sokrates.reports.landscape.statichtml;
 
 import nl.obren.sokrates.common.renderingutils.VisualizationItem;
 import nl.obren.sokrates.common.utils.FormattingUtils;
+import nl.obren.sokrates.reports.utils.HtmlEscapeUtils;
 import nl.obren.sokrates.reports.core.ReportFileExporter;
 import nl.obren.sokrates.reports.core.RichTextReport;
 import nl.obren.sokrates.reports.landscape.utils.Force3DGraphExporter;
@@ -412,8 +413,8 @@ public class LandscapeReportPeopleTopologyTab {
         }
         repositoryDependenciesViaPeople.subList(0, maxListSize).forEach(dependency -> {
             landscapeReport.startTableRow();
-            landscapeReport.addTableCell(dependency.getFromComponent());
-            landscapeReport.addTableCell(dependency.getToComponent());
+            landscapeReport.addTableCellText(dependency.getFromComponent());
+            landscapeReport.addTableCellText(dependency.getToComponent());
             landscapeReport.addTableCell(dependency.getCount() + (dependency.getCount() == 1 ? " person" : " people"));
             landscapeReport.endTableRow();
         });
@@ -537,8 +538,8 @@ public class LandscapeReportPeopleTopologyTab {
             if (repositoryCount2 > 0) {
                 perc2 = 100.0 * dependencyCount / repositoryCount2;
             }
-            landscapeReport.addTableCell(from + "<br><span style='color: grey'>" + repositoryCount1 + " repositories (" + FormattingUtils.getFormattedPercentage(perc1) + "%)</span>", "");
-            landscapeReport.addTableCell(to + "<br><span style='color: grey'>" + repositoryCount2 + " repositories (" + FormattingUtils.getFormattedPercentage(perc2) + "%)</span>", "");
+            landscapeReport.addTableCell(HtmlEscapeUtils.escape(from) + "<br><span style='color: grey'>" + repositoryCount1 + " repositories (" + FormattingUtils.getFormattedPercentage(perc1) + "%)</span>", "");
+            landscapeReport.addTableCell(HtmlEscapeUtils.escape(to) + "<br><span style='color: grey'>" + repositoryCount2 + " repositories (" + FormattingUtils.getFormattedPercentage(perc2) + "%)</span>", "");
             landscapeReport.addTableCell(dependencyCount + " shared repositories", "");
             landscapeReport.endTableRow();
         });
@@ -582,7 +583,7 @@ public class LandscapeReportPeopleTopologyTab {
             index[0] += 1;
             landscapeReport.startTableRow();
             landscapeReport.addTableCell(index[0] + ".", "");
-            landscapeReport.addTableCell(name.getEmail(), "");
+            landscapeReport.addTableCellText(name.getEmail(), "");
             landscapeReport.addTableCell(name.getRepositoriesCount() + "&nbsp;repositories");
             landscapeReport.addTableCell(name.getConnectionsCount() + " connections", "");
             landscapeReport.endTableRow();
@@ -627,7 +628,7 @@ public class LandscapeReportPeopleTopologyTab {
             index[0] += 1;
             landscapeReport.startTableRow();
             landscapeReport.addTableCell(index[0] + ".", "");
-            landscapeReport.addTableCell(name.getEmail(), "");
+            landscapeReport.addTableCellText(name.getEmail(), "");
             landscapeReport.addTableCell(name.getRepositoriesCount() + "&nbsp;repositories");
             landscapeReport.addTableCell(name.getConnectionsCount() + " connections", "");
             landscapeReport.endTableRow();

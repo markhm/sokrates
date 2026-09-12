@@ -36,7 +36,7 @@ public class LandscapeRepositoriesTagsLine {
                 return;
             }
             report.startDiv("border: 1px solid " + tagGroup.getColor() + "; background-color: #fcfcfc; border-radius: 5px; display: inline-block; vertical-align: top; margin-right: 10px; margin-bottom: 5px;");
-            report.addContentInDiv(tagGroup.getName(), "width: 100%; margin: 4px; color: grey; font-size: 70%; white-space: nowrap; overflow: hidden;");
+            report.addContentInDivText(tagGroup.getName(), "width: 100%; margin: 4px; color: grey; font-size: 70%; white-space: nowrap; overflow: hidden;");
             tagGroup.getRepositoryTags().stream()
                     .filter(t -> (tagsMap.getTagStats(t.getKey()) != null))
                     .sorted((a, b) -> tagsMap.getTagStats(b.getKey()).getRepositoryAnalysisResults().size() - tagsMap.getTagStats(a.getKey()).getRepositoryAnalysisResults().size())

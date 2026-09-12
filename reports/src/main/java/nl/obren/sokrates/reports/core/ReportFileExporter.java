@@ -148,7 +148,7 @@ public class ReportFileExporter {
         indexReport.addTab("data", "Data", false);
         List<CustomTab> customTabs = getCustomTabs(analysisResults);
         for (int i = 0; i < customTabs.size(); i++) {
-            indexReport.addTab(customTabId(i), HtmlEscapeUtils.escape(customTabs.get(i).getLabel()), false);
+            indexReport.addTabText(customTabId(i), customTabs.get(i).getLabel(), false);
         }
         indexReport.endDiv();
 

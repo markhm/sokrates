@@ -11,6 +11,7 @@ import nl.obren.sokrates.common.renderingutils.charts.Palette;
 import nl.obren.sokrates.common.utils.FormattingUtils;
 import nl.obren.sokrates.common.utils.ProcessingStopwatch;
 import nl.obren.sokrates.common.utils.RegexUtils;
+import nl.obren.sokrates.reports.utils.HtmlEscapeUtils;
 import nl.obren.sokrates.reports.charts.SimpleOneBarChart;
 import nl.obren.sokrates.reports.core.RichTextReport;
 import nl.obren.sokrates.reports.landscape.data.LandscapeDataExport;
@@ -325,7 +326,7 @@ public class LandscapeReportGenerator {
         landscapeReport.addTab(TOPOLOGIES_TAB_ID, "Topology", false);
         configuration.getCustomTabs().forEach(tab -> {
             int index = configuration.getCustomTabs().indexOf(tab);
-            landscapeReport.addTab(CUSTOM_TAB_ID_PREFIX + index, tab.getName(), false);
+            landscapeReport.addTabText(CUSTOM_TAB_ID_PREFIX + index, tab.getName(), false);
         });
         landscapeReport.addTab(DATA_TAB_ID, "Data", false);
         landscapeReport.endTabGroup();
@@ -1475,8 +1476,8 @@ public class LandscapeReportGenerator {
         String smallTextForNumber = FormattingUtils.getSmallTextForNumber(size) + suffix;
         addLangInfoBlockExtra(smallTextForNumber, extension.getExtension().replace("*.", "").trim(),
                 size + " " + (size == 1 ? "contributor" : "contributors (" + commitsCount + " commits)") + ":\n" +
-                        extractor.getValue(extension).stream().limit(100)
-                                .collect(Collectors.joining(", ")), FormattingUtils.getSmallTextForNumber(commitsCount) + " commits");
+                        HtmlEscapeUtils.escape(extractor.getValue(extension).stream().limit(100)
+                                .collect(Collectors.joining(", "))), FormattingUtils.getSmallTextForNumber(commitsCount) + " commits");
     }
 
     private void addLangInfo(NumericMetric extension, String scope) {
@@ -1486,7 +1487,7 @@ public class LandscapeReportGenerator {
         addLangInfoBlock(smallTextForNumber, extension.getName().replace("*.", "").trim(),
                 size + " " + (size == 1 ? "repository" : "repositories") + ":\n  " +
                         extension.getDescription().stream()
-                                .map(a -> a.getName() + " (" + FormattingUtils.formatCount(a.getValue().intValue()) + " LOC)")
+                                .map(a -> HtmlEscapeUtils.escape(a.getName()) + " (" + FormattingUtils.formatCount(a.getValue().intValue()) + " LOC)")
                                 .collect(Collectors.joining("\n  ")), scope);
     }
 
@@ -1733,7 +1734,7 @@ public class LandscapeReportGenerator {
             String info = "";
             if (count > 0) {
                 info += animalCounts.get(animal).stream()
-                        .map(a -> a.getAnalysisResults().getMetadata().getName() + " " + a.getAnalysisResults().getMainAspectAnalysisResults().getLinesOfCode())
+                        .map(a -> HtmlEscapeUtils.escape(a.getAnalysisResults().getMetadata().getName()) + " " + a.getAnalysisResults().getMainAspectAnalysisResults().getLinesOfCode())
                         .collect(Collectors.joining("\n"));
             }
 

@@ -346,7 +346,7 @@ public class ContributorsReportGenerator {
             if (StringUtils.isNotBlank(contributor.getEmail()) && StringUtils.isNotBlank(contributor.getUserName())) {
                 report.addHtmlContent(HtmlEscapeUtils.escape(contributor.getUserName()) + " <div style='color: grey; font-size: 80%; margin-bottom: 6px;'>&lt;" + HtmlEscapeUtils.escape(contributor.getEmail()) + "&gt;</div>");
             } else {
-                report.addHtmlContent(HtmlEscapeUtils.escape((contributor.getUserName() + contributor.getEmail()).trim()));
+                report.addText((contributor.getUserName() + contributor.getEmail()).trim());
             }
             report.endTableCell();
             // Each commits-count window shows the count with that window's line churn underneath in
@@ -472,7 +472,7 @@ public class ContributorsReportGenerator {
             if (StringUtils.isNotBlank(contributorConnection.getEmail()) && StringUtils.isNotBlank(contributorConnection.getUserName())) {
                 report.addTableCell(HtmlEscapeUtils.escape(contributorConnection.getUserName()) + " <div style='color: grey; font-size: 80%; margin-bottom: 6px;'>&lt;" + HtmlEscapeUtils.escape(contributorConnection.getEmail()) + "&gt;</div>");
             } else {
-                report.addTableCell(HtmlEscapeUtils.escape((contributorConnection.getUserName() + contributorConnection.getEmail()).trim()));
+                report.addTableCellText((contributorConnection.getUserName() + contributorConnection.getEmail()).trim());
             }
             report.addTableCell(contributorConnection.getCount() + "");
             report.addTableCell(contributorConnection.getCommits() + "");
@@ -504,13 +504,13 @@ public class ContributorsReportGenerator {
             if (emailContributorMap.containsKey(from) && StringUtils.isNotBlank(emailContributorMap.get(from).getUserName())) {
                 report.addTableCell(HtmlEscapeUtils.escape(emailContributorMap.get(from).getUserName()) + " <div style='color: grey; font-size: 80%; margin-bottom: 6px;'>&lt;" + HtmlEscapeUtils.escape(from) + "&gt;</div>");
             } else {
-                report.addTableCell(HtmlEscapeUtils.escape(from));
+                report.addTableCellText(from);
             }
 
             if (emailContributorMap.containsKey(to) && StringUtils.isNotBlank(emailContributorMap.get(to).getUserName())) {
                 report.addTableCell(HtmlEscapeUtils.escape(emailContributorMap.get(to).getUserName()) + " <div style='color: grey; font-size: 80%; margin-bottom: 6px;'>&lt;" + HtmlEscapeUtils.escape(to) + "&gt;</div>");
             } else {
-                report.addTableCell(HtmlEscapeUtils.escape(to));
+                report.addTableCellText(to);
             }
 
 
@@ -674,7 +674,7 @@ public class ContributorsReportGenerator {
             if (StringUtils.isNotBlank(contributor.getEmail()) && StringUtils.isNotBlank(contributor.getUserName())) {
                 report.addTableCell(HtmlEscapeUtils.escape(contributor.getUserName()) + " <div style='color: grey; font-size: 80%; margin-bottom: 6px;'>&lt;" + HtmlEscapeUtils.escape(contributor.getEmail()) + "&gt;</div>");
             } else {
-                report.addTableCell(HtmlEscapeUtils.escape((contributor.getUserName() + contributor.getEmail()).trim()));
+                report.addTableCellText((contributor.getUserName() + contributor.getEmail()).trim());
             }
 
             report.addTableCell(contributor.getFirstCommitDate());
